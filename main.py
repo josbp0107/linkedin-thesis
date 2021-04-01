@@ -13,12 +13,12 @@ class GoogleTest(unittest.TestCase):
         cls.driver.maximize_window()
 
     def test_search(self):
-        google = StartBrowser(self.driver)
-        google.open()
-        google.search(SEARCH)
-        print(SEARCH)
-        google.profile()
 
+        google = StartBrowser(self.driver, url_profile='')
+        google.open()
+        #google.search(SEARCH)
+        #print(SEARCH)
+        google.profile()
 
     @classmethod
     def tearDownClass(cls):
