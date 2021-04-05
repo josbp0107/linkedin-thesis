@@ -14,7 +14,7 @@ class GoogleTest(unittest.TestCase):
 
     def test_search(self):
 
-        google = StartBrowser(self.driver, url_profile='')
+        google = StartBrowser(self.driver)
         google.open()
         #google.search(SEARCH)
         #print(SEARCH)
