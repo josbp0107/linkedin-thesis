@@ -88,7 +88,7 @@ class StartBrowser(object):
             parse_json = json.dumps(data, indent=4)
             print(parse_json)
 
-            sleep(4)
+            sleep(6)
         except NoSuchElementException as ex:
             print(ex.msg)
 
@@ -109,14 +109,12 @@ class StartBrowser(object):
                         self.login()
                         sleep(7)
                         self.get_data_profile()
-                        sleep(2)
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(2)
                     else:
                         profile_student.click()
                         sleep(5)
                         self.get_data_profile()
-                        sleep(2)
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(2)
 
