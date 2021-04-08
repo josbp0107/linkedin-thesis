@@ -14,15 +14,14 @@ class GoogleTest(unittest.TestCase):
 
     def test_search(self):
 
-        google = StartBrowser(self.driver)
-        google.open()
-        #google.search(SEARCH)
-        #print(SEARCH)
-        google.profile()
+        linkedin = StartBrowser(self.driver)
+        linkedin.open()
+        #linkedin.login()
+        linkedin.profile()
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.driver.close()
+    # @classmethod
+    # def tearDownClass(cls):
+    #     cls.driver.close()
 
 
 if __name__ == '__main__':

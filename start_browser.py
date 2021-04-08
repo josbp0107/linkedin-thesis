@@ -1,19 +1,20 @@
+import json, requests
+from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from time import sleep
 
-USERNAME = 'keyex47744@whyflkj.com'
-PASSWORD = 'josedavid'
+
+USERNAME = 'fasem47120@yncyjs.com'
+PASSWORD = 'PRUEBA123'
 
 
 class StartBrowser(object):
-
     def __init__(self, driver):
         self._driver = driver
         self._url = 'https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&source=hp&ei=GvddYP_FN9KQ5gLItJ_QBw&iflsig=AINFCbYAAAAAYF4FKsf4407zMvunBoCXNyefbhjDpZqA&oq=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&gs_lcp=Cgdnd3Mtd2l6EANQiSFY5kBg5URoBXAAeAGAAZEBiAHqA5IBAzAuNJgBAKABAqABAaoBB2d3cy13aXqwAQA&sclient=gws-wiz&ved=0ahUKEwj_upnenM7vAhVSiFkKHUjaB3oQ4dUDCAc&uact=5'
-        # self.url_profile = url_profile
         self.search_locator = 'q'
 
     # Verifica que el sitio web de google haya cargado de forma correcta
@@ -52,28 +53,49 @@ class StartBrowser(object):
         print("#" * 100)
 
     def login(self):
+        sleep(5)
         try:
-            login_page = self._driver.find_element_by_css_selector('body > main > div > div > form.join-form > section > p > button')
-            login_page.click()
-            user_field = self._driver.find_element_by_name('session_key')
-            user_field.send_keys(USERNAME)
-            password_field = self._driver.find_element_by_name('session_password')
-            password_field.send_keys(PASSWORD)
-            button_send = self._driver.find_element_by_id('login-submit')
-            button_send.click()
+            self._driver.find_element_by_css_selector('body > main > div > div > form.join-form > section > p > button').click()
+
+            self._driver.find_element_by_name('session_key').send_keys(USERNAME)
+            self._driver.find_element_by_name('session_password').send_keys(PASSWORD)
+
+            self._driver.find_element_by_id('login-submit').click()
+
             self._driver.execute_script("window.history.go(-1)")
+
         except NoSuchElementException as ex:
             print(ex.msg)
 
     def get_data_profile(self):
         data = {}
+        experience = {}
+        sleep(10)
+        try:
+            name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
+            career = self._driver.find_element_by_xpath('//h2[@class="mt1 t-18 t-black t-normal break-words"]').text
 
-        name = self._driver.find_element_by_tag_name('h1').text
-        position = self._driver.find_element_by_xpath('//*[@id="main-content"]/section[1]/section/section[1]/div/div[2]/div[1]/h2').text
-        experience = self._driver.find_elements_by_xpath('')
+            #experience_position = self._driver.find_elements_by_css_selector('#main-content > section.core-rail > section > section.experience.pp-section > ul > li:nth-child(1) > div > h3').text
+            # experience_company = self._driver.find_elements_by_css_selector('#main-content > section.core-rail > section > section.experience.pp-section > ul > li:nth-child(1) > div > h4 > a').text
+            # experience_date = self._driver.find_elements_by_css_selector('#main-content > section.core-rail > section > section.experience.pp-section > ul > li:nth-child(1) > div > div > p > span').text
+            # experience = {
+            #     'position': experience_position,
+            #     'company': experience_company,
+            #     'time': experience_date
+            # }
+            data = {
+                'name': name,
+                'career': career
+                # 'experience': experience
+            }
+            parse_json = json.dumps(data, indent=4)
+            print(parse_json)
+
+            sleep(4)
+        except NoSuchElementException as ex:
+            print(ex.msg)
 
     def profile(self):
-
         page = 2
 
         while page <= 3:
@@ -81,16 +103,26 @@ class StartBrowser(object):
             self.get_link_name_profile()
 
             for profile in range(10):
+                profile_student = self._driver.find_element_by_xpath(f'/html/body/div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div/div[{profile + 1}]/div/div[1]/a')
+
                 try:
-                    profile_student = self._driver.find_element_by_xpath(f'/html/body/div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div/div[{profile + 1}]/div/div[1]/a')
-                    profile_student.click()
-                    sleep(2)
-                    self.login()
-                    sleep(3)
-                    self._driver.execute_script("window.history.go(-1)")
-                    sleep(2)
-                except NoSuchElementException:
-                    print(f'Error {NoSuchElementException}')
+                    if profile == 0:
+                        profile_student.click()
+                        sleep(5)
+                        self.login()
+                        sleep(7)
+                        self.get_data_profile()
+                        self._driver.execute_script("window.history.go(-1)")
+                        sleep(2)
+                    else:
+                        profile_student.click()
+                        sleep(5)
+                        self.get_data_profile()
+                        self._driver.execute_script("window.history.go(-1)")
+                        sleep(2)
+
+                except NoSuchElementException as ex:
+                    print(ex.msg)
 
             navigator_page = self._driver.find_element_by_link_text(f'{page}')
             navigator_page.click()
