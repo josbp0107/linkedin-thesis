@@ -1,14 +1,9 @@
-import json, requests
-from bs4 import BeautifulSoup
+import json
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from time import sleep
-
-
-USERNAME = 'fasem47120@yncyjs.com'
-PASSWORD = 'PRUEBA123'
 
 
 class StartBrowser(object):
@@ -36,10 +31,6 @@ class StartBrowser(object):
         input_field = self._driver.find_element_by_name(self.search_locator)
         input_field.send_keys(keyword)
 
-    def click_submit(self):
-        input_field = self._driver.find_element_by_name(self.search_locator)
-        input_field.submit()
-
     def search(self, keyword):
         self.type_search(keyword)
         self.click_submit()
@@ -53,12 +44,18 @@ class StartBrowser(object):
         print("#" * 100)
 
     def login(self):
-        sleep(5)
         try:
             self._driver.find_element_by_css_selector('body > main > div > div > form.join-form > section > p > button').click()
 
-            self._driver.find_element_by_name('session_key').send_keys(USERNAME)
-            self._driver.find_element_by_name('session_password').send_keys(PASSWORD)
+            with open('account.txt', 'r') as f:
+                line = f.readlines()
+                username = line[0]
+                password = line[1]
+
+            self._driver.find_element_by_name('session_key').send_keys(username)
+            self._driver.find_element_by_name('session_password').send_keys(password)
+
+            sleep(3)
 
             self._driver.find_element_by_id('login-submit').click()
 
@@ -75,7 +72,7 @@ class StartBrowser(object):
             name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
             career = self._driver.find_element_by_xpath('//h2[@class="mt1 t-18 t-black t-normal break-words"]').text
 
-            #experience_position = self._driver.find_elements_by_css_selector('#main-content > section.core-rail > section > section.experience.pp-section > ul > li:nth-child(1) > div > h3').text
+            # experience_position = self._driver.find_elements_by_css_selector('#main-content > section.core-rail > section > section.experience.pp-section > ul > li:nth-child(1) > div > h3').text
             # experience_company = self._driver.find_elements_by_css_selector('#main-content > section.core-rail > section > section.experience.pp-section > ul > li:nth-child(1) > div > h4 > a').text
             # experience_date = self._driver.find_elements_by_css_selector('#main-content > section.core-rail > section > section.experience.pp-section > ul > li:nth-child(1) > div > div > p > span').text
             # experience = {
@@ -112,12 +109,14 @@ class StartBrowser(object):
                         self.login()
                         sleep(7)
                         self.get_data_profile()
+                        sleep(2)
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(2)
                     else:
                         profile_student.click()
                         sleep(5)
                         self.get_data_profile()
+                        sleep(2)
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(2)
 
