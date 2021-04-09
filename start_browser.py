@@ -6,11 +6,14 @@ from selenium.common.exceptions import NoSuchElementException
 from time import sleep
 
 
+
 class StartBrowser(object):
     def __init__(self, driver):
         self._driver = driver
         self._url = 'https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&source=hp&ei=GvddYP_FN9KQ5gLItJ_QBw&iflsig=AINFCbYAAAAAYF4FKsf4407zMvunBoCXNyefbhjDpZqA&oq=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&gs_lcp=Cgdnd3Mtd2l6EANQiSFY5kBg5URoBXAAeAGAAZEBiAHqA5IBAzAuNJgBAKABAqABAaoBB2d3cy13aXqwAQA&sclient=gws-wiz&ved=0ahUKEwj_upnenM7vAhVSiFkKHUjaB3oQ4dUDCAc&uact=5'
         self.search_locator = 'q'
+
+
 
     # Verifica que el sitio web de google haya cargado de forma correcta
     @property
@@ -36,14 +39,18 @@ class StartBrowser(object):
         self.click_submit()
 
     def get_link_name_profile(self):
-        for profile in range(10):
-            get_profile = self._driver.find_element_by_xpath(f'/html/body/div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div/div[{profile + 1}]/div/div[1]/a').get_attribute('href')
-            get_name = self._driver.find_element_by_xpath(f'/html/body/div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div/div[{profile + 1}]/div/div[1]/a/h3').text
-            get_name = get_name[:get_name.find("-") - 1]
-            print(f'{get_profile} -> {get_name} , {profile + 1}')
-        print("#" * 100)
+        try:
+            for profile in range(10):
+                get_profile = self._driver.find_element_by_xpath(f'/html/body/div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div/div[{profile + 1}]/div/div[1]/a').get_attribute('href')
+                get_name = self._driver.find_element_by_xpath(f'/html/body/div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div/div[{profile + 1}]/div/div[1]/a/h3').text
+                get_name = get_name[:get_name.find("-") - 1]
+                print(f'{get_profile} -> {get_name} , {profile + 1}')
+            print("#" * 100)
+        except NoSuchElementException as ex:
+            print(ex.msg)
 
     def login(self):
+
         try:
             self._driver.find_element_by_css_selector('body > main > div > div > form.join-form > section > p > button').click()
 
@@ -55,7 +62,7 @@ class StartBrowser(object):
             self._driver.find_element_by_name('session_key').send_keys(username)
             self._driver.find_element_by_name('session_password').send_keys(password)
 
-            sleep(3)
+            sleep(15)
 
             self._driver.find_element_by_id('login-submit').click()
 
@@ -67,28 +74,30 @@ class StartBrowser(object):
     def get_data_profile(self):
         data = {}
         experience = {}
-        sleep(10)
         try:
             name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
             career = self._driver.find_element_by_xpath('//h2[@class="mt1 t-18 t-black t-normal break-words"]').text
-
-            # experience_position = self._driver.find_elements_by_css_selector('#main-content > section.core-rail > section > section.experience.pp-section > ul > li:nth-child(1) > div > h3').text
-            # experience_company = self._driver.find_elements_by_css_selector('#main-content > section.core-rail > section > section.experience.pp-section > ul > li:nth-child(1) > div > h4 > a').text
-            # experience_date = self._driver.find_elements_by_css_selector('#main-content > section.core-rail > section > section.experience.pp-section > ul > li:nth-child(1) > div > div > p > span').text
-            # experience = {
-            #     'position': experience_position,
-            #     'company': experience_company,
-            #     'time': experience_date
-            # }
+            count_elements_experience = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li'))
+            for i in range(count_elements_experience):
+                experience_position = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i+1}]//h3').text
+                experience_company = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i+1}]//p[contains(@class, "pv-entity__secondary-title t-14")]').text
+                experience_date = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i+1}]//h4[contains(@class, "pv-entity__date-range")]/span[not(@class)]').text
+                experience = {
+                    'position': experience_position,
+                    'company': experience_company,
+                    'time': experience_date
+                }
+                print(experience)
             data = {
                 'name': name,
-                'career': career
-                # 'experience': experience
+                'career': career,
+                'element_experience': count_elements_experience,
+                'experience': experience
             }
             parse_json = json.dumps(data, indent=4)
             print(parse_json)
 
-            sleep(6)
+            sleep(18)
         except NoSuchElementException as ex:
             print(ex.msg)
 
