@@ -6,7 +6,7 @@ from selenium.common.exceptions import NoSuchElementException
 from time import sleep
 
 
-class StartBrowser(object):
+class StartBrowser():
     def __init__(self, driver):
         self._driver = driver
         self._url = 'https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&source=hp&ei=GvddYP_FN9KQ5gLItJ_QBw&iflsig=AINFCbYAAAAAYF4FKsf4407zMvunBoCXNyefbhjDpZqA&oq=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&gs_lcp=Cgdnd3Mtd2l6EANQiSFY5kBg5URoBXAAeAGAAZEBiAHqA5IBAzAuNJgBAKABAqABAaoBB2d3cy13aXqwAQA&sclient=gws-wiz&ved=0ahUKEwj_upnenM7vAhVSiFkKHUjaB3oQ4dUDCAc&uact=5'
@@ -62,6 +62,10 @@ class StartBrowser(object):
         except NoSuchElementException as ex:
             print(ex.msg)
 
+    def is_student(self):
+        elements_education = self._driver.find_elements_by_xpath('').text
+        return True
+
     def get_data_profile(self):
         data = {}
         experience = {}
@@ -69,6 +73,17 @@ class StartBrowser(object):
             name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
             career = self._driver.find_element_by_xpath('//h2[@class="mt1 t-18 t-black t-normal break-words"]').text
             elements_experience = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li'))
+            elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
+
+            data = {
+                'name': name,
+                'career': career,
+                'element_experience': elements_experience,
+                'experience': experience
+            }
+            parse_json = json.dumps(data, indent=4)
+            print(parse_json)
+
             for i in range(elements_experience):
                 experience_position = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i+1}]//h3').text
                 experience_company = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i+1}]//p[contains(@class, "pv-entity__secondary-title t-14")]').text
@@ -79,15 +94,15 @@ class StartBrowser(object):
                     'time': experience_date
                 }
                 print(experience)
-            data = {
-                'name': name,
-                'career': career,
-                'element_experience': elements_experience,
-                'experience': experience
-            }
-            parse_json = json.dumps(data, indent=4)
-            print(parse_json)
 
+            for i in range(elements_education):
+                education_name = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//h3').text
+
+                education = {
+                    'entidad': education_name
+                }
+                print(education)
+            print("*" * 100)
             sleep(18)
         except NoSuchElementException as ex:
             print(ex.msg)
@@ -101,23 +116,21 @@ class StartBrowser(object):
 
             for profile in range(10):
                 profile_student = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div/div[{profile+1}]//a')
-
                 try:
+
                     if profile == 0:
                         profile_student.click()
-                        sleep(5)
+                        sleep(10)
                         self.login()
                         sleep(7)
                         self.get_data_profile()
                         self._driver.execute_script("window.history.go(-1)")
-                        sleep(2)
                     else:
                         profile_student.click()
                         sleep(5)
                         self.get_data_profile()
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(2)
-
                 except NoSuchElementException as ex:
                     print(ex.msg)
 
