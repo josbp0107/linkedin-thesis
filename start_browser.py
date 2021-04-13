@@ -79,6 +79,7 @@ class StartBrowser:
                 'name': name,
                 'career': career,
                 'element_experience': elements_experience,
+                'elements_education': elements_education,
                 'experience': experience
             }
             parse_json = json.dumps(data, indent=4)
@@ -97,14 +98,14 @@ class StartBrowser:
                 print(parse_experience)
 
             if elements_education == 1:
-                education_name = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li//h3').text
+                education_name = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text
                     
-                entity_degree_comma = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li//p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text
-                entiti_secondary = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li//p[contains(@class, "pv-entity__fos")]/span[@class="pv-entity__comma-item"]').text
-                education_description = f'{entity_degree_comma}, {entiti_secondary}'
+                entity_degree_comma = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text
+                entity_secondary = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//p[contains(@class, "pv-entity__fos")]/span[@class="pv-entity__comma-item"]').text
+                education_description = f'{entity_degree_comma}, {entity_secondary}'
                     
-                education_time_from = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li//p[contains (@class, "pv-entity__dates")]/span/time[1]')
-                education_time_to = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li//p[contains (@class, "pv-entity__dates")]/span/time[2]')
+                education_time_from = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//p[contains (@class, "pv-entity__dates")]/span/time[1]').text
+                education_time_to = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//p[contains (@class, "pv-entity__dates")]/span/time[2]').text
                 education_time = f'{education_time_from} - {education_time_to}'
 
                 education = {
@@ -112,7 +113,8 @@ class StartBrowser:
                    'titulo': education_description,
                    'time': education_time
                 }
-                print(education)
+                parse_education = json.dumps(education, indent=4)
+                print(parse_education)
                 sleep(18)
             else:
                 for i in range(elements_education):
@@ -149,7 +151,7 @@ class StartBrowser:
                 profile_student = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div/div[{profile+1}]//a')
                 try:
 
-                    if profile == 0:
+                    if profile == 0 and page == 2:
                         profile_student.click()
                         sleep(10)
                         self.login()
