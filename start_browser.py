@@ -6,7 +6,7 @@ from selenium.common.exceptions import NoSuchElementException
 from time import sleep
 
 
-class StartBrowser():
+class StartBrowser:
     def __init__(self, driver):
         self._driver = driver
         self._url = 'https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&source=hp&ei=GvddYP_FN9KQ5gLItJ_QBw&iflsig=AINFCbYAAAAAYF4FKsf4407zMvunBoCXNyefbhjDpZqA&oq=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&gs_lcp=Cgdnd3Mtd2l6EANQiSFY5kBg5URoBXAAeAGAAZEBiAHqA5IBAzAuNJgBAKABAqABAaoBB2d3cy13aXqwAQA&sclient=gws-wiz&ved=0ahUKEwj_upnenM7vAhVSiFkKHUjaB3oQ4dUDCAc&uact=5'
@@ -93,17 +93,48 @@ class StartBrowser():
                     'company': experience_company,
                     'time': experience_date
                 }
-                print(experience)
+                parse_experience = json.dumps(experience, indent=4)
+                print(parse_experience)
 
-            for i in range(elements_education):
-                education_name = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//h3').text
+            if elements_education == 1:
+                education_name = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li//h3').text
+                    
+                entity_degree_comma = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li//p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text
+                entiti_secondary = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li//p[contains(@class, "pv-entity__fos")]/span[@class="pv-entity__comma-item"]').text
+                education_description = f'{entity_degree_comma}, {entiti_secondary}'
+                    
+                education_time_from = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li//p[contains (@class, "pv-entity__dates")]/span/time[1]')
+                education_time_to = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li//p[contains (@class, "pv-entity__dates")]/span/time[2]')
+                education_time = f'{education_time_from} - {education_time_to}'
 
                 education = {
-                    'entidad': education_name
+                   'universidad': education_name,
+                   'titulo': education_description,
+                   'time': education_time
                 }
                 print(education)
-            print("*" * 100)
-            sleep(18)
+                sleep(18)
+            else:
+                for i in range(elements_education):
+                    education_name = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//h3').text
+                    
+                    entity_degree_comma = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text
+                    entity_secondary = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//p[contains(@class, "pv-entity__fos")]/span[@class="pv-entity__comma-item"]').text
+                    education_description = f'{entity_degree_comma}, {entity_secondary}'
+                    
+                    education_time_from = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//p[contains (@class, "pv-entity__dates")]/span/time[1]').text
+                    education_time_to = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//p[contains (@class, "pv-entity__dates")]/span/time[2]').text
+                    education_time = f'{education_time_from} - {education_time_to}'
+
+                    education = {
+                        'entidad': education_name,
+                        'descripcion': education_description,
+                        'time': education_time
+                    }
+                    parse_education = json.dumps(education, indent=4)
+                    print(parse_education)
+                print("*" * 100)
+                sleep(18)
         except NoSuchElementException as ex:
             print(ex.msg)
 
@@ -124,13 +155,15 @@ class StartBrowser():
                         self.login()
                         sleep(7)
                         self.get_data_profile()
+                        sleep(2)
                         self._driver.execute_script("window.history.go(-1)")
                     else:
                         profile_student.click()
                         sleep(5)
                         self.get_data_profile()
-                        self._driver.execute_script("window.history.go(-1)")
                         sleep(2)
+                        self._driver.execute_script("window.history.go(-1)")
+                        sleep(5)
                 except NoSuchElementException as ex:
                     print(ex.msg)
 
