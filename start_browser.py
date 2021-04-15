@@ -52,17 +52,13 @@ class StartBrowser:
         except NoSuchElementException as ex:
             print(ex.msg)
 
-    def is_student(self):
-        elements_education = self._driver.find_elements_by_xpath('').text
-        return True
-
     def profile(self):
         get_data = GetDataProfile(self._driver)
         page = 2
 
         while page <= 3:
 
-            get_data.get_link_name_profile() #self.get_link_name_profile()
+            get_data.get_link_name_profile()
 
             for profile in range(10):
                 profile_student = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div/div[{profile+1}]//a')
