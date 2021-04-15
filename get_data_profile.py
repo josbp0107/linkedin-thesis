@@ -10,7 +10,8 @@ class GetDataProfile:
     def get_link_name_profile(self):
         try:
             for profile in range(10):
-                url_profile = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div/div[{profile+1}]//a').get_attribute('href')
+                #url_profile = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div/div[{profile+1}]//a').get_attribute('href')
+                url_profile = self._driver.find_element_by_xpath(f'//*[@id="rso"]/div/div[{profile + 1}]/div/div/div[1]/a').get_attribute('href')
                 get_name = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div/div[{profile+1}]//h3').text
                 get_name = get_name[:get_name.find("-") - 1]
                 print(f'{url_profile} -> {get_name} , {profile + 1}')
@@ -89,24 +90,23 @@ class GetDataProfile:
                     sleep(18)
                 else:
                     for i in range(elements_education):
-                        education_name = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//h3').text
+                        education_name = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//h3').text
 
-                        entity_degree_comma = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text
-                        entity_secondary = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//p[contains(@class, "pv-entity__fos")]/span[@class="pv-entity__comma-item"]').text
+                        entity_degree_comma = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text
+                        entity_secondary = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//p[contains(@class, "pv-entity__fos")]/span[@class="pv-entity__comma-item"]').text
                         education_description = f'{entity_degree_comma}, {entity_secondary}'
 
-                        education_time_from = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//p[contains (@class, "pv-entity__dates")]/span/time[1]').text
-                        education_time_to = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//p[contains (@class, "pv-entity__dates")]/span/time[2]').text
+                        education_time_from = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//p[contains (@class, "pv-entity__dates")]/span/time[1]').text
+                        education_time_to = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//p[contains (@class, "pv-entity__dates")]/span/time[2]').text
                         education_time = f'{education_time_from} - {education_time_to}'
 
                         education = {
-                            'entidad': education_name,
-                            'descripcion': education_description,
+                            'universidad': education_name,
+                            'titulo': education_description,
                             'time': education_time
                         }
                         parse_education = json.dumps(education, ensure_ascii=False, indent=4)
                         print(parse_education)
-                        print("*" * 100)
-                sleep(18)
+                    sleep(18)
             except NoSuchElementException as ex:
                 print(ex.msg)

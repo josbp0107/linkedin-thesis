@@ -59,11 +59,10 @@ class StartBrowser:
         while page <= 3:
 
             get_data.get_link_name_profile()
-
-            for profile in range(10):
-                profile_student = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div/div[{profile+1}]//a')
-                try:
-
+            try:
+                for profile in range(10):
+                    #profile_student = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div/div[{profile+1}]//a')
+                    profile_student = self._driver.find_element_by_xpath(f'//*[@id="rso"]/div/div[{profile + 1}]/div/div/div[1]/a')
                     if profile == 0 and page == 2:
                         profile_student.click()
                         sleep(10)
@@ -80,9 +79,10 @@ class StartBrowser:
                         sleep(2)
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(5)
-                except NoSuchElementException as ex:
-                    print(ex.msg)
 
-            navigator_page = self._driver.find_element_by_link_text(f'{page}')
-            navigator_page.click()
-            page += 1
+                navigator_page = self._driver.find_element_by_link_text(f'{page}')
+                navigator_page.click()
+                page += 1
+            except NoSuchElementException as ex:
+                print(ex.msg)
+
