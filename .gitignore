@@ -2,6 +2,7 @@
 drivers/
 
 account.txt
+data.json
 
 # IDEA
 .idea/
