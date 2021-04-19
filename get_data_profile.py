@@ -10,15 +10,16 @@ class GetDataProfile:
     def get_link_name_profile(self):
         try:
             for profile in range(10):
-                url_profile = self._driver.find_element_by_xpath(f'//*[@id="rso"]/div/div[{profile + 1}]/div/div/div[1]/a').get_attribute('href')
-                get_name = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div/div[{profile+1}]//h3').text
+                url_profile = self._driver.find_element_by_xpath(
+                    f'//*[@id="rso"]/div/div[{profile + 1}]/div/div/div[1]/a').get_attribute('href')
+                get_name = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div/div[{profile + 1}]//h3').text
                 get_name = get_name[:get_name.find("-") - 1]
                 print(f'{url_profile} -> {get_name} , {profile + 1}')
             print("#" * 100)
         except NoSuchElementException as ex:
             print(ex.msg)
 
-     # Validate if the student with university education at CECAR
+    # Validate if the student with university education at CECAR
     def is_student(self):
         elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
         if elements_education == 1:
@@ -28,15 +29,24 @@ class GetDataProfile:
             else:
                 return False
         else:
-            university_name = [self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//h3').text for i in range(elements_education)]
+            university_name = [
+                self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//h3').text for i
+                in range(elements_education)]
             if "Corporación Universitaria del Caribe" in university_name:
                 return True
             else:
                 return False
 
+    def write_file(self, data):
+        with open("data.json", "a+", encoding="utf-8") as f:
+            f.write(f'{data},')
+
     def get_data_profile(self):
         data = {}
         experience = {}
+        list_experience = []
+        list_education = []
+
         if self.is_student():
             try:
                 name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
@@ -44,35 +54,35 @@ class GetDataProfile:
                 elements_experience = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li'))
                 elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
 
-                data = {
-                    'name': name,
-                    'career': career,
-                    'element_experience': elements_experience,
-                    'elements_education': elements_education,
-                }
-                parse_json = json.dumps(data, ensure_ascii=False, indent=4)
-                print(parse_json)
-
                 for i in range(elements_experience):
                     experience_position = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i + 1}]//h3').text
                     experience_company = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i + 1}]//p[contains(@class, "pv-entity__secondary-title t-14")]').text
                     experience_date = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i + 1}]//h4[contains(@class, "pv-entity__date-range")]/span[not(@class)]').text
+
                     experience = {
-                        'position': experience_position,
-                        'company': experience_company,
-                        'time': experience_date
+                        "position": experience_position,
+                        "company": experience_company,
+                        "time": experience_date
                     }
-                    parse_experience = json.dumps(experience, ensure_ascii=False, indent=4)
-                    print(parse_experience)
+                    list_experience.append(experience)
+
+                # data = {
+                #     "name": name,
+                #     "career": career,
+                #     "element_experience": elements_experience,
+                #     "elements_education": elements_education,
+                #     "experience": list_experience
+                # }
             except NoSuchElementException as ex:
                 print(ex.msg)
+
             # Section Education
             try:
                 if elements_education == 1:
                     education_name = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text
 
                     entity_degree_comma = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text
-                    #entity_secondary = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//p[contains(@class, "pv-entity__fos")]/span[@class="pv-entity__comma-item"]').text
+                    # entity_secondary = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//p[contains(@class, "pv-entity__fos")]/span[@class="pv-entity__comma-item"]').text
                     education_description = entity_degree_comma
 
                     education_time_from = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//p[contains (@class, "pv-entity__dates")]/span/time[1]').text
@@ -80,33 +90,47 @@ class GetDataProfile:
                     education_time = f'{education_time_from} - {education_time_to}'
 
                     education = {
-                        'universidad': education_name,
-                        'titulo': education_description,
-                        'time': education_time
+                        "universidad": education_name,
+                        "titulo": education_description,
+                        "time": education_time
                     }
-                    parse_education = json.dumps(education, ensure_ascii=False, indent=4)
-                    print(parse_education)
+                    list_education.append(education)
+                    # parse_education = json.dumps(education, ensure_ascii=False, indent=4)
+                    # print(parse_education)
+
                     sleep(18)
                 else:
                     for i in range(elements_education):
-                        education_name = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//h3').text
+                        education_name = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//h3').text
+                        entity_degree_comma = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text
 
-                        entity_degree_comma = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text
-
-                        #entity_secondary = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//p[contains(@class, "pv-entity__fos")]/span[@class="pv-entity__comma-item"]').text
+                        # entity_secondary = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//p[contains(@class, "pv-entity__fos")]/span[@class="pv-entity__comma-item"]').text
                         education_description = entity_degree_comma
 
-                        education_time_from = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//p[contains (@class, "pv-entity__dates")]/span/time[1]').text
-                        education_time_to = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//p[contains (@class, "pv-entity__dates")]/span/time[2]').text
+                        education_time_from = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//p[contains (@class, "pv-entity__dates")]/span/time[1]').text
+                        education_time_to = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//p[contains (@class, "pv-entity__dates")]/span/time[2]').text
                         education_time = f'{education_time_from} - {education_time_to}'
 
                         education = {
-                            'universidad': education_name,
-                            'titulo': education_description,
-                            'time': education_time
+                            "universidad": education_name,
+                            "titulo": education_description,
+                            "time": education_time
                         }
-                        parse_education = json.dumps(education, ensure_ascii=False, indent=4)
-                        print(parse_education)
+                        # parse_education = json.dumps(education, ensure_ascii=False, indent=4)
+                        # print(parse_education)
+                        list_education.append(education)
                     sleep(18)
+
+                data = {
+                    "name": name,
+                    "career": career,
+                    "element_experience": elements_experience,
+                    "elements_education": elements_education,
+                    "experience": list_experience,
+                    "education": list_education
+                }
+                data = json.dumps(data, ensure_ascii=False, indent=4)
+                self.write_file(data)
+
             except NoSuchElementException as ex:
                 print(ex.msg)
