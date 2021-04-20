@@ -51,6 +51,7 @@ class GetDataProfile:
             try:
                 name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
                 career = self._driver.find_element_by_xpath('//h2[@class="mt1 t-18 t-black t-normal break-words"]').text
+                url_profile = self._driver.current_url
                 elements_experience = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li'))
                 elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
 
@@ -65,14 +66,6 @@ class GetDataProfile:
                         "time": experience_date
                     }
                     list_experience.append(experience)
-
-                # data = {
-                #     "name": name,
-                #     "career": career,
-                #     "element_experience": elements_experience,
-                #     "elements_education": elements_education,
-                #     "experience": list_experience
-                # }
             except NoSuchElementException as ex:
                 print(ex.msg)
 
@@ -95,9 +88,6 @@ class GetDataProfile:
                         "time": education_time
                     }
                     list_education.append(education)
-                    # parse_education = json.dumps(education, ensure_ascii=False, indent=4)
-                    # print(parse_education)
-
                     sleep(18)
                 else:
                     for i in range(elements_education):
@@ -116,21 +106,18 @@ class GetDataProfile:
                             "titulo": education_description,
                             "time": education_time
                         }
-                        # parse_education = json.dumps(education, ensure_ascii=False, indent=4)
-                        # print(parse_education)
                         list_education.append(education)
                     sleep(18)
-
-                data = {
-                    "name": name,
-                    "career": career,
-                    "element_experience": elements_experience,
-                    "elements_education": elements_education,
-                    "experience": list_experience,
-                    "education": list_education
-                }
-                data = json.dumps(data, ensure_ascii=False, indent=4)
-                self.write_file(data)
-
             except NoSuchElementException as ex:
                 print(ex.msg)
+            data = {
+                "name": name,
+                "career": career,
+                "url": url_profile,
+                "element_experience": elements_experience,
+                "elements_education": elements_education,
+                "experience": list_experience,
+                "education": list_education
+            }
+            data = json.dumps(data, ensure_ascii=False, indent=4)
+            self.write_file(data)
