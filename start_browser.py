@@ -22,14 +22,6 @@ class StartBrowser:
     def open(self):
         self._driver.get(self._url)
 
-    def type_search(self, keyword):
-        input_field = self._driver.find_element_by_name(self.search_locator)
-        input_field.send_keys(keyword)
-
-    def search(self, keyword):
-        self.type_search(keyword)
-        self.click_submit()
-
     def login(self):
 
         try:
@@ -61,7 +53,6 @@ class StartBrowser:
             get_data.get_link_name_profile()
             try:
                 for profile in range(10):
-                    #profile_student = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div/div[{profile+1}]//a')
                     profile_student = self._driver.find_element_by_xpath(f'//*[@id="rso"]/div/div[{profile + 1}]/div/div/div[1]/a')
                     if profile == 0 and page == 2:
                         profile_student.click()
