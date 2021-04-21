@@ -2,6 +2,7 @@ import unittest
 import os
 from selenium import webdriver
 from start_browser import StartBrowser
+from files import Files
 
 SEARCH = 'site:linkedin.com/in/ AND "ingenieria de sistemas" AND "Corporacion Universitaria del Caribe"'
 
@@ -16,10 +17,15 @@ class GoogleTest(unittest.TestCase):
     def test_search(self):
 
         linkedin = StartBrowser(self.driver)
+        file = Files()
+
         linkedin.open()
-        linkedin.delete_json()
+
+        file.delete_json()
+
         linkedin.profile()
-        linkedin.close_json_file()
+
+        file.close_json_file()
 
     @classmethod
     def tearDownClass(cls):
