@@ -1,11 +1,13 @@
 import json
 from time import sleep
 from selenium.common.exceptions import NoSuchElementException
+from files import Files
 
 
 class GetDataProfile:
     def __init__(self, driver):
         self._driver = driver
+        self._files = Files()
 
     def get_link_name_profile(self):
         try:
@@ -37,13 +39,10 @@ class GetDataProfile:
             else:
                 return False
 
-    def write_file(self, data):
-        with open("data.json", "a+", encoding="utf-8") as f:
-            f.write(f'{data},')
-
     def get_data_profile(self):
         data = {}
         experience = {}
+
         list_experience = []
         list_education = []
 
@@ -119,4 +118,5 @@ class GetDataProfile:
                 "education": list_education
             }
             data = json.dumps(data, ensure_ascii=False, indent=4)
-            self.write_file(data)
+            self._files.write_file(data)
+
