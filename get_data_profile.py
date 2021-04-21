@@ -47,14 +47,15 @@ class GetDataProfile:
         list_experience = []
         list_education = []
 
+        elements_experience = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li'))
+        elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
+
+        name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
+        career = self._driver.find_element_by_xpath('//h2[@class="mt1 t-18 t-black t-normal break-words"]').text
+        url_profile = self._driver.current_url
+
         if self.is_student():
             try:
-                name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
-                career = self._driver.find_element_by_xpath('//h2[@class="mt1 t-18 t-black t-normal break-words"]').text
-                url_profile = self._driver.current_url
-                elements_experience = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li'))
-                elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
-
                 for i in range(elements_experience):
                     experience_position = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i + 1}]//h3').text
                     experience_company = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i + 1}]//p[contains(@class, "pv-entity__secondary-title t-14")]').text
@@ -75,7 +76,6 @@ class GetDataProfile:
                     education_name = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text
 
                     entity_degree_comma = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text
-                    # entity_secondary = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//p[contains(@class, "pv-entity__fos")]/span[@class="pv-entity__comma-item"]').text
                     education_description = entity_degree_comma
 
                     education_time_from = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//p[contains (@class, "pv-entity__dates")]/span/time[1]').text
@@ -94,7 +94,6 @@ class GetDataProfile:
                         education_name = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//h3').text
                         entity_degree_comma = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text
 
-                        # entity_secondary = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//p[contains(@class, "pv-entity__fos")]/span[@class="pv-entity__comma-item"]').text
                         education_description = entity_degree_comma
 
                         education_time_from = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//p[contains (@class, "pv-entity__dates")]/span/time[1]').text
