@@ -1,4 +1,5 @@
 import unittest
+import os
 from selenium import webdriver
 from start_browser import StartBrowser
 
@@ -16,7 +17,9 @@ class GoogleTest(unittest.TestCase):
 
         linkedin = StartBrowser(self.driver)
         linkedin.open()
+        linkedin.delete_json()
         linkedin.profile()
+        linkedin.close_json_file()
 
     @classmethod
     def tearDownClass(cls):
