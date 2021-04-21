@@ -5,12 +5,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from time import sleep
 from get_data_profile import GetDataProfile
+from files import Files
 
 
 class StartBrowser:
     def __init__(self, driver):
         self._driver = driver
         self._url = 'https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&source=hp&ei=GvddYP_FN9KQ5gLItJ_QBw&iflsig=AINFCbYAAAAAYF4FKsf4407zMvunBoCXNyefbhjDpZqA&oq=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&gs_lcp=Cgdnd3Mtd2l6EANQiSFY5kBg5URoBXAAeAGAAZEBiAHqA5IBAzAuNJgBAKABAqABAaoBB2d3cy13aXqwAQA&sclient=gws-wiz&ved=0ahUKEwj_upnenM7vAhVSiFkKHUjaB3oQ4dUDCAc&uact=5'
+        self._files = Files()
 
     # Verifica que el sitio web de google haya cargado de forma correcta
     @property
@@ -45,28 +47,6 @@ class StartBrowser:
         except NoSuchElementException as ex:
             print(ex.msg)
 
-    # Delete json file when its create before to run the project
-    def delete_json(self):
-        if os.path.exists("data.json"):
-            return os.remove("data.json")
-
-    # Method to create json file that start with "[" for it take format of json
-    def create_json_file(self):
-        with open("data.json", "x", encoding="utf-8") as f:
-            f.write("[\n")
-            f.close()
-
-    def close_json_file(self):
-        with open("data.json", "r+", encoding="utf-8") as input:
-            with open("new_data.json", "a+", encoding="utf-8") as f:
-                for line in input:
-                    if line != "},":
-                        f.write(line)
-                f.write("}]")
-
-            # d = f.readlines()
-            # f.seek(0)
-
     def profile(self):
         get_data = GetDataProfile(self._driver)
         page = 2
@@ -75,10 +55,10 @@ class StartBrowser:
 
             get_data.get_link_name_profile()
             try:
-                for profile in range(10):
+                for profile in range(2):
                     profile_student = self._driver.find_element_by_xpath(f'//*[@id="rso"]/div/div[{profile + 1}]/div/div/div[1]/a')
                     if profile == 0 and page == 2:
-                        self.create_json_file()
+                        self._files.create_json_file()
                         profile_student.click()
                         sleep(8)
                         self.login()
