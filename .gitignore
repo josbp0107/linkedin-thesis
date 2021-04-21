@@ -3,6 +3,8 @@ drivers/
 
 account.txt
 data.json
+*.json
+
 
 # IDEA
 .idea/
