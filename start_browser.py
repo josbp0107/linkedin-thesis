@@ -1,4 +1,4 @@
-import json
+import os
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -18,10 +18,11 @@ class StartBrowser:
         WebDriverWait(self._driver, 10).until(EC.presence_of_element_located((By.NAME, 'q')))
         return True
 
-    # Llamada a la URL
+    # call the url
     def open(self):
         self._driver.get(self._url)
 
+    # Method to login in linkedin and start to scraper
     def login(self):
 
         try:
@@ -44,30 +45,53 @@ class StartBrowser:
         except NoSuchElementException as ex:
             print(ex.msg)
 
+    # Delete json file when its create before to run the project
+    def delete_json(self):
+        if os.path.exists("data.json"):
+            return os.remove("data.json")
+
+    # Method to create json file that start with "[" for it take format of json
+    def create_json_file(self):
+        with open("data.json", "x", encoding="utf-8") as f:
+            f.write("[\n")
+            f.close()
+
+    def close_json_file(self):
+        with open("data.json", "r+", encoding="utf-8") as input:
+            with open("new_data.json", "a+", encoding="utf-8") as f:
+                for line in input:
+                    if line != "},":
+                        f.write(line)
+                f.write("}]")
+
+            # d = f.readlines()
+            # f.seek(0)
+
     def profile(self):
         get_data = GetDataProfile(self._driver)
         page = 2
 
-        while page <= 3:
+        while page < 3:
 
             get_data.get_link_name_profile()
             try:
                 for profile in range(10):
                     profile_student = self._driver.find_element_by_xpath(f'//*[@id="rso"]/div/div[{profile + 1}]/div/div/div[1]/a')
                     if profile == 0 and page == 2:
+                        self.create_json_file()
                         profile_student.click()
-                        sleep(10)
+                        sleep(8)
                         self.login()
                         sleep(7)
                         get_data.get_data_profile()
-                        sleep(2)
+                        sleep(1)
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(2)
                     else:
                         profile_student.click()
                         sleep(5)
                         get_data.get_data_profile()
-                        sleep(2)
+                        sleep(1)
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(5)
 
@@ -76,4 +100,3 @@ class StartBrowser:
                 page += 1
             except NoSuchElementException as ex:
                 print(ex.msg)
-
