@@ -45,25 +45,27 @@ class GetDataProfile:
 
         list_experience = []
         list_education = []
+        list_certification = []
 
         elements_experience = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li'))
         elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
-
-        name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
-        career = self._driver.find_element_by_xpath('//h2[@class="mt1 t-18 t-black t-normal break-words"]').text
-        url_profile = self._driver.current_url
+        elements_certifications = len(self._driver.find_elements_by_xpath('//section[ @ id = "certifications-section"]/ul/li'))
 
         if self.is_student():
             try:
+                name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
+                career = self._driver.find_element_by_xpath('//h2[@class="mt1 t-18 t-black t-normal break-words"]').text
+                url_profile = self._driver.current_url
+
                 for i in range(elements_experience):
                     experience_position = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i + 1}]//h3').text
                     experience_company = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i + 1}]//p[contains(@class, "pv-entity__secondary-title t-14")]').text
                     experience_date = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i + 1}]//h4[contains(@class, "pv-entity__date-range")]/span[not(@class)]').text
 
                     experience = {
-                        "position": experience_position,
+                        "responsibility": experience_position,
                         "company": experience_company,
-                        "time": experience_date
+                        "duration": experience_date
                     }
                     list_experience.append(experience)
             except NoSuchElementException as ex:
@@ -82,9 +84,9 @@ class GetDataProfile:
                     education_time = f'{education_time_from} - {education_time_to}'
 
                     education = {
-                        "universidad": education_name,
-                        "titulo": education_description,
-                        "time": education_time
+                        "institution": education_name,
+                        "degree": education_description,
+                        "duration": education_time
                     }
                     list_education.append(education)
                     sleep(18)
@@ -100,22 +102,54 @@ class GetDataProfile:
                         education_time = f'{education_time_from} - {education_time_to}'
 
                         education = {
-                            "universidad": education_name,
-                            "titulo": education_description,
-                            "time": education_time
+                            "institution": education_name,
+                            "degree": education_description,
+                            "duration": education_time
                         }
                         list_education.append(education)
                     sleep(18)
             except NoSuchElementException as ex:
                 print(ex.msg)
+
+            # Certifications section
+            try:
+                certifications = {}
+                if elements_certifications == 1:
+                    name_certification = self._driver.find_element_by_xpath('//section[@id="certifications-section"]//h3').text
+                    institution_certification = self._driver.find_element_by_xpath('//section[@id="certifications-section"]//p[1]/span[2]').text
+                    duration_certification = self._driver.find_element_by_xpath('//section[@id="certifications-section"]//p[2]/span[2]').text
+                    certifications = {
+                        "certification": name_certification,
+                        "institution": institution_certification,
+                        "duration": duration_certification
+                    }
+                    list_certification.append(certifications)
+                    sleep(4)
+                else:
+                    for i in range(elements_certifications):
+                        name_certification = self._driver.find_element_by_xpath(f'//section[@id="certifications-section"]/ul/li[{i+1}]//h3').text
+                        institution_certification = self._driver.find_element_by_xpath(f'//section[@id="certifications-section"]/ul/li[{i+1}]//p[1]/span[2]').text
+                        duration_certification = self._driver.find_element_by_xpath(f'//section[@id="certifications-section"]/ul/li[{i+1}]//p[2]/span[2]').text
+                        certifications = {
+                            "certification": name_certification,
+                            "institution": institution_certification,
+                            "duration": duration_certification
+                        }
+                        list_certification.append(certifications)
+                        sleep(4)
+            except NoSuchElementException as ex:
+                print(ex.msg)
+
             data = {
                 "name": name,
                 "career": career,
                 "url": url_profile,
                 "element_experience": elements_experience,
                 "elements_education": elements_education,
-                "experience": list_experience,
-                "education": list_education
+                "elements_certification": elements_certifications,
+                "work": list_experience,
+                "education": list_education,
+                "certification": list_certification
             }
             data = json.dumps(data, ensure_ascii=False, indent=4)
             self._files.write_file(data)
