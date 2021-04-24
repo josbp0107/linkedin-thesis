@@ -50,13 +50,14 @@ class StartBrowser:
     def profile(self):
         get_data = GetDataProfile(self._driver)
         page = 2
+        elements_href = len(self._driver.find_elements_by_xpath('//div[@class="g"]'))
 
-        while page < 3:
-
+        while page <= 3:
+            print(elements_href)
             get_data.get_link_name_profile()
             try:
-                for profile in range(2):
-                    profile_student = self._driver.find_element_by_xpath(f'//*[@id="rso"]/div/div[{profile + 1}]/div/div/div[1]/a')
+                for profile in range(elements_href):
+                    profile_student = self._driver.find_element_by_xpath(f'//div[@class="g"][{profile+1}]//a')
                     if profile == 0 and page == 2:
                         self._files.create_json_file()
                         profile_student.click()

@@ -42,6 +42,7 @@ class GetDataProfile:
     def get_data_profile(self):
         data = {}
         experience = {}
+        certifications = {}
 
         list_experience = []
         list_education = []
@@ -49,7 +50,7 @@ class GetDataProfile:
 
         elements_experience = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li'))
         elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
-        elements_certifications = len(self._driver.find_elements_by_xpath('//section[ @ id = "certifications-section"]/ul/li'))
+        elements_certifications = len(self._driver.find_elements_by_xpath('//section[@id="certifications-section"]/ul/li'))
 
         if self.is_student():
             try:
@@ -89,7 +90,7 @@ class GetDataProfile:
                         "duration": education_time
                     }
                     list_education.append(education)
-                    sleep(18)
+
                 else:
                     for i in range(elements_education):
                         education_name = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//h3').text
@@ -107,13 +108,11 @@ class GetDataProfile:
                             "duration": education_time
                         }
                         list_education.append(education)
-                    sleep(18)
             except NoSuchElementException as ex:
                 print(ex.msg)
 
             # Certifications section
             try:
-                certifications = {}
                 if elements_certifications == 1:
                     name_certification = self._driver.find_element_by_xpath('//section[@id="certifications-section"]//h3').text
                     institution_certification = self._driver.find_element_by_xpath('//section[@id="certifications-section"]//p[1]/span[2]').text
@@ -124,7 +123,6 @@ class GetDataProfile:
                         "duration": duration_certification
                     }
                     list_certification.append(certifications)
-                    sleep(4)
                 else:
                     for i in range(elements_certifications):
                         name_certification = self._driver.find_element_by_xpath(f'//section[@id="certifications-section"]/ul/li[{i+1}]//h3').text
@@ -136,7 +134,6 @@ class GetDataProfile:
                             "duration": duration_certification
                         }
                         list_certification.append(certifications)
-                        sleep(4)
             except NoSuchElementException as ex:
                 print(ex.msg)
 
@@ -153,4 +150,5 @@ class GetDataProfile:
             }
             data = json.dumps(data, ensure_ascii=False, indent=4)
             self._files.write_file(data)
+            sleep(18)
 
