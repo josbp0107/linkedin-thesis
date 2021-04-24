@@ -1,5 +1,4 @@
 import unittest
-import os
 from selenium import webdriver
 from start_browser import StartBrowser
 from files import Files
@@ -20,11 +19,8 @@ class GoogleTest(unittest.TestCase):
         file = Files()
 
         linkedin.open()
-
         file.delete_json()
-
         linkedin.profile()
-
         file.close_json_file()
 
     @classmethod
