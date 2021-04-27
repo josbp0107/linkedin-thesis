@@ -43,6 +43,7 @@ class GetDataProfile:
         certifications = {}
 
         list_experience = []
+        list_description = []
         list_education = []
         list_certification = []
 
@@ -86,13 +87,29 @@ class GetDataProfile:
 
             # Experience extended format
             try:
+                elements_experience_extend_position = len(self._driver.find_elements_by_xpath('//ul[@class="pv-entity__position-group mt2"]/li'))
+
                 if elements_experience_extend == 1:
                     experience_company = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]//div[@class="pv-entity__company-summary-info"]/h3/span[not(@class)]').text
                     experience_date = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]//div[@class="pv-entity__company-summary-info"]/h4/span[not(@class)]').text
+                    for element in range(elements_experience_extend_position):
+                        responsibility = self._driver.find_element_by_xpath(f'//ul[@class="pv-entity__position-group mt2"]/li[{element+1}]//h3/span[not (@class)]').text
+                        duration = self._driver.find_element_by_xpath(f'//ul[@class="pv-entity__position-group mt2"]/li[{element+1}]//h4/span[not (@class)]').text
+                        location = self._driver.find_element_by_xpath(f'//ul[@class="pv-entity__position-group mt2"]/li[{element+1}]//h4[contains(@class, "location")]/span[2]').text
+                        entity_description = self._driver.find_element_by_xpath(f'//ul[@class="pv-entity__position-group mt2"]/li[{element+1}]//p').text
+                        description = {
+                            "responsibility": responsibility,
+                            "duration": duration,
+                            "location": location,
+                            "job description": entity_description
+                            }
+
+                        list_description.append(description)
 
                     experience = {
                         "company": experience_company,
-                        "duration": experience_date
+                        "duration": experience_date,
+                        "description": list_description
                     }
                     list_experience.append(experience)
 
