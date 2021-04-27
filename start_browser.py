@@ -53,7 +53,6 @@ class StartBrowser:
         elements_href = len(self._driver.find_elements_by_xpath('//div[@class="g"]'))
 
         while page <= 3:
-            print(elements_href)
             get_data.get_link_name_profile()
             try:
                 for profile in range(elements_href):
