@@ -1,5 +1,4 @@
 import json
-import re
 from time import sleep
 from selenium.common.exceptions import NoSuchElementException
 from files import Files
@@ -48,6 +47,8 @@ class GetDataProfile:
         list_certification = []
 
         elements_experience = len(self._driver.find_elements_by_xpath(f'//section[@id="experience-section"]/ul/li/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]'))
+        elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]'))
+
         elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
         elements_certifications = len(self._driver.find_elements_by_xpath('//section[@id="certifications-section"]/ul/li'))
 
@@ -80,6 +81,21 @@ class GetDataProfile:
                             "duration": experience_date
                         }
                         list_experience.append(experience)
+            except NoSuchElementException as ex:
+                print(ex.msg)
+
+            # Experience extended format
+            try:
+                if elements_experience_extend == 1:
+                    experience_company = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]//div[@class="pv-entity__company-summary-info"]/h3/span[not(@class)]').text
+                    experience_date = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]//div[@class="pv-entity__company-summary-info"]/h4/span[not(@class)]').text
+
+                    experience = {
+                        "company": experience_company,
+                        "duration": experience_date
+                    }
+                    list_experience.append(experience)
+
             except NoSuchElementException as ex:
                 print(ex.msg)
 
@@ -152,7 +168,7 @@ class GetDataProfile:
                 "name": name,
                 "career": career,
                 "url": url_profile,
-                "element_experience": elements_experience,
+                "element_experience": elements_experience + elements_experience_extend,
                 "elements_education": elements_education,
                 "elements_certification": elements_certifications,
                 "work": list_experience,
