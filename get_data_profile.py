@@ -161,5 +161,5 @@ class GetDataProfile:
             }
             data = json.dumps(data, ensure_ascii=False, indent=4)
             self._files.write_file(data)
-            sleep(18)
+            sleep(19)
 
