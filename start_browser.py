@@ -64,7 +64,6 @@ class StartBrowser:
                         self.login()
                         sleep(7)
                         get_data.get_data_profile()
-                        sleep(1)
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(2)
                     else:
