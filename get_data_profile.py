@@ -96,12 +96,10 @@ class GetDataProfile:
                         responsibility = self._driver.find_element_by_xpath(f'//ul[@class="pv-entity__position-group mt2"]/li[{element+1}]//h3/span[not (@class)]').text
                         duration = self._driver.find_element_by_xpath(f'//ul[@class="pv-entity__position-group mt2"]/li[{element+1}]//h4/span[not (@class)]').text
                         location = self._driver.find_element_by_xpath(f'//ul[@class="pv-entity__position-group mt2"]/li[{element+1}]//h4[contains(@class, "location")]/span[2]').text
-                        entity_description = self._driver.find_element_by_xpath(f'//ul[@class="pv-entity__position-group mt2"]/li[{element+1}]//p').text
                         description = {
                             "responsibility": responsibility,
                             "duration": duration,
                             "location": location,
-                            "job description": entity_description
                             }
 
                         list_description.append(description)
