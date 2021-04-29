@@ -37,6 +37,14 @@ class GetDataProfile:
             else:
                 return False
 
+    def exist_button(self):
+        try:
+            button_see_more = self._driver.find_element_by_xpath('//section[@id="experience-section"]/div/button')
+            button_see_more.click()
+            sleep(3)
+        except:
+            print('Not found button')
+
     def get_data_profile(self):
         data = {}
         experience = {}
@@ -47,9 +55,6 @@ class GetDataProfile:
         list_education = []
         list_certification = []
 
-        elements_experience = len(self._driver.find_elements_by_xpath(f'//section[@id="experience-section"]/ul/li/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]'))
-        elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]'))
-
         elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
         elements_certifications = len(self._driver.find_elements_by_xpath('//section[@id="certifications-section"]/ul/li'))
 
@@ -58,6 +63,9 @@ class GetDataProfile:
         url_profile = self._driver.current_url
 
         if self.is_student():
+            self.exist_button()
+            elements_experience = len(self._driver.find_elements_by_xpath(f'//section[@id="experience-section"]/ul/li/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]'))
+            elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]'))
             try:
                 if elements_experience == 1:
                     experience_position = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li//h3').text
