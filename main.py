@@ -18,9 +18,11 @@ class GoogleTest(unittest.TestCase):
         linkedin = StartBrowser(self.driver)
         file = Files()
 
-        linkedin.open()
         file.delete_json()
+
+        linkedin.open()
         linkedin.profile()
+
         file.close_json_file()
 
     @classmethod
