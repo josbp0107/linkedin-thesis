@@ -15,7 +15,7 @@ class Files:
 
     # Method to create json file that start with "[" for it take format of json
     def create_json_file(self):
-        with open("data.json", "x", encoding="utf-8") as f:
+        with open("data.json", "a+", encoding="utf-8") as f:
             f.write("[\n")
             f.close()
 
