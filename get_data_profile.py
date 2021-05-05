@@ -12,12 +12,14 @@ class GetDataProfile:
     def get_link_name_profile(self):
         try:
             for profile in range(10):
-                url_profile = self._driver.find_element_by_xpath(
-                    f'//*[@id="rso"]/div/div[{profile + 1}]/div/div/div[1]/a').get_attribute('href')
-                get_name = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div/div[{profile + 1}]//h3').text
+                url_profile = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div[@class="g"][{profile+1}]//div[@class="yuRUbf"]/a').get_attribute('href')
+
+                get_name = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div[@class="g"][{profile+1}]//div[@class="yuRUbf"]/a/h3').text
+
                 get_name = get_name[:get_name.find("-") - 1]
                 print(f'{url_profile} -> {get_name} , {profile + 1}')
             print("#" * 100)
+            sleep(3)
         except NoSuchElementException as ex:
             print(ex.msg)
 
@@ -26,24 +28,27 @@ class GetDataProfile:
         elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
         if elements_education == 1:
             university_name = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text
+            print(university_name)
             if university_name == "Corporación Universitaria del Caribe":
                 return True
             else:
                 return False
         else:
             university_name = [self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//h3').text for i in range(elements_education)]
+            print(university_name)
             if "Corporación Universitaria del Caribe" in university_name:
                 return True
             else:
                 return False
 
+    # Validate if exist button to more experience section
     def exist_button(self):
         try:
             button_see_more = self._driver.find_element_by_xpath('//section[@id="experience-section"]/div/button')
             button_see_more.click()
             sleep(3)
         except:
-            print('Not found button')
+            print('Not found Experience section Button')
 
     def get_data_profile(self):
         data = {}
