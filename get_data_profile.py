@@ -11,7 +11,8 @@ class GetDataProfile:
 
     def get_link_name_profile(self):
         try:
-            for profile in range(9):
+            elements_profile = len(self._driver.find_elements_by_xpath('//div[@id="rso"]/div[starts-with(@class,"g")]//a'))
+            for profile in range(elements_profile):
                 #url_profile = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div[@class="g"][{profile+1}]//div[@class="yuRUbf"]/a').get_attribute('href')
                 #url_profile = self._driver.find_element_by_xpath(f'//div[@class="g"][{profile+1}]//a').get_attribute('href')
                 url_profile = self._driver.find_element_by_xpath(f'//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[{profile+1}]/div/div/div[1]/a').get_attribute('href')
