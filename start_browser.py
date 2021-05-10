@@ -52,10 +52,11 @@ class StartBrowser:
         elements_href = len(self._driver.find_elements_by_xpath('//div[@class="g"]'))
 
         while page < 6:
+            elements_profile = len(self._driver.find_elements_by_xpath('//div[@id="rso"]/div[starts-with(@class,"g")]//a'))
             get_data.get_link_name_profile()
             sleep(2)
             try:
-                for profile in range(9):
+                for profile in range(elements_profile):
                     profile_student = self._driver.find_element_by_xpath(f'//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[{profile+1}]/div/div/div[1]/a')
                     #profile_student = self._driver.find_element_by_xpath(f'//div[@class="g"][{profile+1}]//a')
                     if profile == 0 and page == 2:
