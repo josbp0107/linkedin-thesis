@@ -51,12 +51,13 @@ class StartBrowser:
         page = 2
         elements_href = len(self._driver.find_elements_by_xpath('//div[@class="g"]'))
 
-        while page <= 4:
+        while page < 6:
             get_data.get_link_name_profile()
             sleep(2)
             try:
-                for profile in range(elements_href):
-                    profile_student = self._driver.find_element_by_xpath(f'//div[@class="g"][{profile+1}]//a')
+                for profile in range(9):
+                    profile_student = self._driver.find_element_by_xpath(f'//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[{profile+1}]/div/div/div[1]/a')
+                    #profile_student = self._driver.find_element_by_xpath(f'//div[@class="g"][{profile+1}]//a')
                     if profile == 0 and page == 2:
                         self._files.create_json_file()
                         self._driver.execute_script("arguments[0].click();", profile_student)
@@ -76,7 +77,8 @@ class StartBrowser:
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(5)
                 navigator_page = self._driver.find_element_by_link_text(f'{page}')
-                navigator_page.click()
+                self._driver.execute_script("arguments[0].click();", navigator_page)
+                #navigator_page.click()
                 page += 1
             except NoSuchElementException as ex:
                 print(ex.msg)
