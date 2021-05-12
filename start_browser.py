@@ -14,10 +14,10 @@ class StartBrowser:
         self._files = Files()
 
     # Verifica que el sitio web de google haya cargado de forma correcta
-    @property
-    def is_loaded(self):
-        WebDriverWait(self._driver, 10).until(EC.presence_of_element_located((By.NAME, 'q')))
-        return True
+    # @property
+    # def is_loaded(self):
+    #     WebDriverWait(self._driver, 10).until(EC.presence_of_element_located((By.NAME, 'q')))
+    #     return True
 
     # call the url
     def open(self):
@@ -49,7 +49,6 @@ class StartBrowser:
     def profile(self):
         get_data = GetDataProfile(self._driver)
         page = 2
-        elements_href = len(self._driver.find_elements_by_xpath('//div[@class="g"]'))
 
         while page < 6:
             elements_profile = len(self._driver.find_elements_by_xpath('//div[@id="rso"]/div[starts-with(@class,"g")]//a'))
