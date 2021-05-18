@@ -14,10 +14,10 @@ class StartBrowser:
         self._files = Files()
 
     # Verifica que el sitio web de google haya cargado de forma correcta
-    # @property
-    # def is_loaded(self):
-    #     WebDriverWait(self._driver, 10).until(EC.presence_of_element_located((By.NAME, 'q')))
-    #     return True
+    @property
+    def is_loaded(self):
+        WebDriverWait(self._driver, 10).until(EC.presence_of_element_located((By.NAME, 'q')))
+        return True
 
     # call the url
     def open(self):
@@ -57,7 +57,7 @@ class StartBrowser:
             try:
                 for profile in range(elements_profile):
                     profile_student = self._driver.find_element_by_xpath(f'//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[{profile+1}]/div/div/div[1]/a')
-                    #profile_student = self._driver.find_element_by_xpath(f'//div[@class="g"][{profile+1}]//a')
+
                     if profile == 0 and page == 2:
                         self._files.create_json_file()
                         self._driver.execute_script("arguments[0].click();", profile_student)

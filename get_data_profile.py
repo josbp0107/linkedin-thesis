@@ -21,18 +21,21 @@ class GetDataProfile:
                 get_name = get_name[:get_name.find("-") - 1]
                 print(f'{url_profile} -> {get_name} , {profile + 1}')
             print("#" * 100)
-            sleep(2)
+            #sleep(2)
         except NoSuchElementException as ex:
             print(ex.msg)
 
     # Validate if the student with university education at CECAR
     def is_student(self):
+        career = ['ingeniería de sistemas', 'ingeniería', 'ingeniero', 'desarrollador de software',
+                  'ingeniero de sistemas', 'grado de ingeniería']
         elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
         if elements_education == 1:
             university_name = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text
             university_career = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text).lower()
             print(university_name, university_career)
-            if university_name == "Corporación Universitaria del Caribe" and "ingenier" in university_career:
+            if university_name == "Corporación Universitaria del Caribe" and university_career in career:
+                sleep(2)
                 return True
             else:
                 return False
@@ -43,10 +46,11 @@ class GetDataProfile:
             print(university_career)
 
             if "Corporación Universitaria del Caribe" in university_name:
+                sleep(2)
                 return True
             else:
+                sleep(2)
                 return False
-        sleep(4)
 
     # Validate if exist button to more experience section
     def exist_button(self):
