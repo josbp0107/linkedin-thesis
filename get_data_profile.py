@@ -47,7 +47,28 @@ class GetDataProfile:
 
     def is_student_career(self):
         career = ['ingeniería de sistemas', 'ingeniería', 'ingeniero', 'desarrollador de software',
-                  'ingeniero de sistemas', 'grado de ingeniería']
+                  'ingeniero de sistemas', 'grado de ingeniería', 'grado en ingeniería de sistemas', 'grado en ingeniería']
+        career_degree = []
+        add_career = []
+        elements_career = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]'))
+        if elements_career == 1:
+            career_degree = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower()
+            print(career_degree)
+            if career_degree in career:
+                return True
+            else:
+                return False
+        else:
+            count = 0
+            for i in range(elements_career):
+                career_degree = (self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower()
+                add_career.append(career_degree)
+                if add_career[i] in career:
+                    count += 1
+                if count > 0:
+                    return True
+                else:
+                    return False
 
     # Validate if exist button to more experience section
     def exist_button(self):
@@ -55,7 +76,7 @@ class GetDataProfile:
             button_see_more = self._driver.find_element_by_xpath('//section[@id="experience-section"]/div/button')
             button_see_more.click()
             print("#"*30)
-            sleep(3)
+            sleep(4)
         except:
             print('Not found Experience section Button')
             print("#" * 30)
@@ -78,12 +99,11 @@ class GetDataProfile:
         url_profile = self._driver.current_url
         print(name)
 
-        self.exist_button()
-
-        if self.is_student():
-            elements_experience = len(self._driver.find_elements_by_xpath(f'//section[@id="experience-section"]/ul/li/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]'))
-            elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]'))
+        if self.is_student() and self.is_student_career():
             try:
+                self.exist_button()
+                elements_experience = len(self._driver.find_elements_by_xpath(f'//section[@id="experience-section"]/ul/li/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]'))
+                elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]'))
                 if elements_experience == 1:
                     experience_position = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li//h3').text
                     experience_company = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li//p[contains(@class, "pv-entity__secondary-title t-14")]').text
