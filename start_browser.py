@@ -51,7 +51,6 @@ class StartBrowser:
         page = 2
 
         while page < 12:
-            #elements_profile = len(self._driver.find_elements_by_xpath('//div[@id="rso"]/div[starts-with(@class,"g")]//a'))
             elements_profile = len(self._driver.find_elements_by_xpath('//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div/div/div/div[1]/a'))
             get_data.get_link_name_profile()
             sleep(2)

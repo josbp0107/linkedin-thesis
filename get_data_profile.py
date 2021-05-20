@@ -13,7 +13,6 @@ class GetDataProfile:
         try:
             elements_profile = len(self._driver.find_elements_by_xpath('//div[@id="rso"]/div[starts-with(@class,"g")]//a'))
             for profile in range(elements_profile):
-                #url_profile = self._driver.find_element_by_xpath(f'//div[@class="g"][{profile+1}]//a').get_attribute('href')
                 url_profile = self._driver.find_element_by_xpath(f'//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[{profile+1}]/div/div/div[1]/a').get_attribute('href')
                 get_name = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div[@class="g"][{profile+1}]//div[@class="yuRUbf"]/a/h3').text
                 get_name = get_name[:get_name.find("-") - 1]
@@ -27,9 +26,7 @@ class GetDataProfile:
         elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
         if elements_education == 1:
             university_name = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text
-            #university_career = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text).lower()
             print(university_name)
-            #print(university_career)
             if university_name == "Corporación Universitaria del Caribe":
                 return True
             else:
@@ -37,14 +34,13 @@ class GetDataProfile:
         else:
             university_name = []
             university_name = [self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//h3').text for i in range(elements_education)]
-            #university_career = [(self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text).lower() for i in range(elements_education)]
             print(university_name)
-            #print(university_career)
             if "Corporación Universitaria del Caribe" in university_name:
                 return True
             else:
                 return False
 
+    # Validate if student contains a degree as System engineer, engineer or others
     def is_student_career(self):
         career = ['ingeniería de sistemas', 'ingeniería', 'ingeniero', 'desarrollador de software',
                   'ingeniero de sistemas', 'grado de ingeniería', 'grado en ingeniería de sistemas', 'grado en ingeniería']
