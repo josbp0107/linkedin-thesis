@@ -13,44 +13,41 @@ class GetDataProfile:
         try:
             elements_profile = len(self._driver.find_elements_by_xpath('//div[@id="rso"]/div[starts-with(@class,"g")]//a'))
             for profile in range(elements_profile):
-                #url_profile = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div[@class="g"][{profile+1}]//div[@class="yuRUbf"]/a').get_attribute('href')
                 #url_profile = self._driver.find_element_by_xpath(f'//div[@class="g"][{profile+1}]//a').get_attribute('href')
                 url_profile = self._driver.find_element_by_xpath(f'//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[{profile+1}]/div/div/div[1]/a').get_attribute('href')
                 get_name = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div[@class="g"][{profile+1}]//div[@class="yuRUbf"]/a/h3').text
-
                 get_name = get_name[:get_name.find("-") - 1]
                 print(f'{url_profile} -> {get_name} , {profile + 1}')
             print("#" * 100)
-            #sleep(2)
         except NoSuchElementException as ex:
             print(ex.msg)
 
     # Validate if the student with university education at CECAR
     def is_student(self):
-        career = ['ingeniería de sistemas', 'ingeniería', 'ingeniero', 'desarrollador de software',
-                  'ingeniero de sistemas', 'grado de ingeniería']
         elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
         if elements_education == 1:
             university_name = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text
-            university_career = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text).lower()
-            print(university_name, university_career)
-            if university_name == "Corporación Universitaria del Caribe" and university_career in career:
-                sleep(2)
+            #university_career = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text).lower()
+            print(university_name)
+            #print(university_career)
+            if university_name == "Corporación Universitaria del Caribe":
                 return True
             else:
                 return False
         else:
+            university_name = []
             university_name = [self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//h3').text for i in range(elements_education)]
-            university_career = [(self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text).lower() for i in range(elements_education)]
+            #university_career = [(self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text).lower() for i in range(elements_education)]
             print(university_name)
-            print(university_career)
-
+            #print(university_career)
             if "Corporación Universitaria del Caribe" in university_name:
-                sleep(2)
                 return True
             else:
-                sleep(2)
                 return False
+
+    def is_student_career(self):
+        career = ['ingeniería de sistemas', 'ingeniería', 'ingeniero', 'desarrollador de software',
+                  'ingeniero de sistemas', 'grado de ingeniería']
 
     # Validate if exist button to more experience section
     def exist_button(self):
@@ -80,9 +77,10 @@ class GetDataProfile:
         career = self._driver.find_element_by_xpath('//h2[@class="mt1 t-18 t-black t-normal break-words"]').text
         url_profile = self._driver.current_url
         print(name)
-        if self.is_student():
 
-            self.exist_button()
+        self.exist_button()
+
+        if self.is_student():
             elements_experience = len(self._driver.find_elements_by_xpath(f'//section[@id="experience-section"]/ul/li/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]'))
             elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]'))
             try:
@@ -147,6 +145,7 @@ class GetDataProfile:
                     education_name = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text
 
                     entity_degree_comma = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text
+
                     education_description = entity_degree_comma
 
                     education_time_from = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//p[contains (@class, "pv-entity__dates")]/span/time[1]').text
@@ -159,7 +158,6 @@ class GetDataProfile:
                         "duration": education_time
                     }
                     list_education.append(education)
-
                 else:
                     for i in range(elements_education):
                         education_name = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//h3').text
