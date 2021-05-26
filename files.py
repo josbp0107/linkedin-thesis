@@ -34,3 +34,14 @@ class Files:
                     if line != "},":
                         f.write(line)
                 f.write("}]")
+
+    def student_exists(self, name):
+        count = 0
+        with open("data.json", "r+", encoding="utf-8") as f:
+            for line in f:
+                if name in line:
+                    count += 1
+            if count == 0:
+                return True
+            else:
+                return False
