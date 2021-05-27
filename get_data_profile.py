@@ -1,6 +1,7 @@
 import json
 from time import sleep
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver .support.ui import WebDriverWait
 from files import Files
 
 
@@ -24,18 +25,22 @@ class GetDataProfile:
     # Validate if the student with university education at CECAR
     def is_student(self):
         elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
+        university_name = ''
         if elements_education == 1:
-            university_name = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text
-            print(university_name)
+            university_name = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text).lower()
+            print(f'Universidad: {university_name}')
+            sleep(2)
             if university_name == "Corporación Universitaria del Caribe":
                 return True
             else:
                 return False
         else:
             university_name = []
-            university_name = [self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//h3').text for i in range(elements_education)]
-            print(university_name)
-            if "Corporación Universitaria del Caribe" in university_name:
+            for i in range(elements_education):
+                university_name.append((self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//h3').text).lower())
+            print(f'Universidades: {university_name}')
+            sleep(3)
+            if "corporación universitaria del caribe" in university_name:
                 return True
             else:
                 return False
@@ -43,28 +48,30 @@ class GetDataProfile:
     # Validate if student contains a degree as System engineer, engineer or others
     def is_student_career(self):
         career = ['ingeniería de sistemas', 'ingeniería', 'ingeniero', 'desarrollador de software',
-                  'ingeniero de sistemas', 'grado de ingeniería', 'grado en ingeniería de sistemas', 'grado en ingeniería']
-        career_degree = []
-        add_career = []
+                  'ingeniero de sistemas', 'grado de ingeniería', 'grado en ingeniería de sistemas',
+                  'grado en ingeniería', 'ciclo formativo de grado superior', 'ingeniería de software']
         elements_career = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]'))
         if elements_career == 1:
             career_degree = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower()
-            print(career_degree)
+            print(f'Carreras: {career_degree}')
             if career_degree in career:
                 return True
             else:
                 return False
         else:
             count = 0
-            for i in range(elements_career):
-                career_degree = (self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower()
-                add_career.append(career_degree)
-                if add_career[i] in career:
+            career_degree = [(self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower() for i in range(elements_career)]
+            print(f'Carreras: {career_degree}')
+            sleep(2)
+            for i in career_degree:
+                #career_degree.append((self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower())
+                if career_degree[i] in career:
                     count += 1
-                if count > 0:
-                    return True
-                else:
-                    return False
+            if count > 0:
+                return True
+            else:
+                return False
+
 
     # Validate if exist button to more experience section
     def exist_button(self):
@@ -89,15 +96,20 @@ class GetDataProfile:
 
         elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
         elements_certifications = len(self._driver.find_elements_by_xpath('//section[@id="certifications-section"]/ul/li'))
+        #name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
 
-        name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
-        career = self._driver.find_element_by_xpath('//h2[@class="mt1 t-18 t-black t-normal break-words"]').text
+        name = self._driver.find_element_by_xpath('//div/div/h1').text
+        if not name:
+            name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
+
+        #career = self._driver.find_element_by_xpath('//h2[@class="mt1 t-18 t-black t-normal break-words"]').text
+        career = self._driver.find_element_by_xpath('//div[contains(@class, "break-words")]').text
         url_profile = self._driver.current_url
         print(name)
 
-        if self.is_student() and self.is_student_career():
+        if self.is_student() and self.is_student_career() and self._files.student_exists(name):
             try:
-                self.exist_button()
+                #self.exist_button()
                 elements_experience = len(self._driver.find_elements_by_xpath(f'//section[@id="experience-section"]/ul/li/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]'))
                 elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]'))
                 if elements_experience == 1:
