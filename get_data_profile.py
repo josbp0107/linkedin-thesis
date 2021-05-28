@@ -1,7 +1,7 @@
 import json
 from time import sleep
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver .support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait
 from files import Files
 
 
@@ -71,7 +71,6 @@ class GetDataProfile:
                 return True
             else:
                 return False
-
 
     # Validate if exist button to more experience section
     def exist_button(self):
@@ -246,4 +245,3 @@ class GetDataProfile:
             data = json.dumps(data, ensure_ascii=False, indent=4)
             self._files.write_file(data)
             sleep(19)
-
