@@ -25,7 +25,6 @@ class StartBrowser:
 
     # Method to login in linkedin and start to scraper
     def login(self):
-
         try:
             self._driver.find_element_by_xpath('//p[starts-with(@class, "join")]/button').click()
 
@@ -36,21 +35,18 @@ class StartBrowser:
 
             self._driver.find_element_by_name('session_key').send_keys(username)
             self._driver.find_element_by_name('session_password').send_keys(password)
-
             sleep(15)
-
             self._driver.find_element_by_id('login-submit').click()
-
             self._driver.execute_script("window.history.go(-1)")
-
         except NoSuchElementException as ex:
             print(ex.msg)
 
     def profile(self):
+        url_profile = self._driver.current_url
         get_data = GetDataProfile(self._driver)
         page = 2
 
-        while page < 12:
+        while page < 25:
             elements_profile = len(self._driver.find_elements_by_xpath('//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div/div/div/div[1]/a'))
             get_data.get_link_name_profile()
             sleep(2)
@@ -70,11 +66,15 @@ class StartBrowser:
                     else:
                         #profile_student.click()
                         self._driver.execute_script("arguments[0].click();", profile_student)
-                        sleep(5)
-                        get_data.get_data_profile()
-                        sleep(1)
-                        self._driver.execute_script("window.history.go(-1)")
-                        sleep(5)
+                        if url_profile == 'https://www.linkedin.com/feed/':
+                            sleep(3)
+                            self._driver.execute_script("window.history.go(-1)")
+                        else:
+                            sleep(5)
+                            get_data.get_data_profile()
+                            sleep(1)
+                            self._driver.execute_script("window.history.go(-1)")
+                            sleep(5)
                 #navigator_page = self._driver.find_element_by_xpath(f'//table/tbody/tr/td[{page+1}]/a')
                 navigator_page = self._driver.find_element_by_link_text(f'{page}')
                 self._driver.execute_script("arguments[0].click();", navigator_page)
