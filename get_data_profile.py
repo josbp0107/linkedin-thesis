@@ -25,8 +25,8 @@ class GetDataProfile:
     # Validate if the student with university education at CECAR
     def is_student(self):
         elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
-        university_name = ''
         if elements_education == 1:
+            university_name = ''
             university_name = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text).lower()
             print(f'Universidad: {university_name}')
             sleep(2)
