@@ -39,7 +39,6 @@ class GetDataProfile:
             university_name = []
             for i in range(elements_education):
                 university_name.append((self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i+1}]//h3').text).lower())
-                print(university_name)
             print(f'Universidades: {university_name}')
             sleep(3)
             if "corporación universitaria del caribe" in university_name:
@@ -52,11 +51,10 @@ class GetDataProfile:
         career = ['ingeniería de sistemas', 'ingeniería', 'ingeniero', 'desarrollador de software',
                   'ingeniero de sistemas', 'grado de ingeniería', 'grado en ingeniería de sistemas',
                   'grado en ingeniería', 'ciclo formativo de grado superior', 'ingeniería de software']
-        elements_career = len(self._driver.find_elements_by_xpath('//section[5]/ul/li/div/h4/span[1]'))
+        elements_career = len(self._driver.find_elements_by_xpath('//section[@class="education pp-section"]/ul/li/div/h4/span[1]'))
         if elements_career == 1:
             career_degree = ''
-            career_degree = self._driver.find_element_by_xpath('//section[5]/ul/li/div/h4/span[1]').text
-            career_degree = career_degree.lower()
+            career_degree = (self._driver.find_element_by_xpath('//section[@class="education pp-section"]/ul/li/div/h4/span[1]').text).lower
             print(f'Carrera: {career_degree}')
             if career_degree in career:
                 return True
@@ -65,7 +63,7 @@ class GetDataProfile:
         else:
             career_degree = []
             count = 0
-            career_degree = [(self._driver.find_element_by_xpath(f'//section[5]/ul/li[{i+1}]/div/h4/span[1]').text).lower() for i in range(elements_career)]
+            career_degree = [(self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i+1}]/div/h4/span[1]').text).lower() for i in range(elements_career)]
             print(f'Carreras: {career_degree}')
             sleep(1)
             for i in career_degree:
@@ -150,12 +148,10 @@ class GetDataProfile:
                         responsibility = self._driver.find_element_by_xpath(f'//ul/li[@class="experience-group experience-item"]/ul[@class="experience-group__positions"]/li[{element+1}]/div/h3').text
                         duration = self._driver.find_element_by_xpath(f'//ul[@class="pv-entity__position-group mt2"]/li[{element+1}]//h4/span[not (@class)]').text
                         location = self._driver.find_element_by_xpath(f'//ul/li[@class="experience-group experience-item"]/ul[@class="experience-group__positions"]/li[{element+1}]/div/div/p//span[@class="date-range__duration"]').text
-                        description_position = self._driver.find_element_by_xpath(f'//ul/li[@class="experience-group experience-item"]/ul[@class="experience-group__positions"]/li[{element+1}]/div//p[@class="show-more-less-text__text--less"]')
                         description = {
                             "responsibility": responsibility,
                             "duration": duration,
                             "location": location,
-                            "description_position": description_position
                             }
 
                         list_description.append(description)
@@ -169,7 +165,7 @@ class GetDataProfile:
             except NoSuchElementException as ex:
                 print(ex.msg)
 
-            # Section Education
+            # Education section
             try:
                 if elements_education == 1:
                     education_name = self._driver.find_element_by_xpath('//section[@class="education pp-section"]/ul/li//h3').text
@@ -190,7 +186,7 @@ class GetDataProfile:
                         education_name = self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i + 1}]//h3').text
                         education_description = self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i + 1}]/div/h4/span[1]').text
 
-                        education_time_from = self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i + 1}]div/div//time[1]').text
+                        education_time_from = self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i + 1}]/div/div//time[1]').text
                         education_time_to = self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i + 1}]/div/div//time[2]').text
                         education_time = f'{education_time_from} - {education_time_to}'
 
@@ -206,9 +202,9 @@ class GetDataProfile:
             # Certifications section
             try:
                 if elements_certifications == 1:
-                    name_certification = self._driver.find_element_by_xpath('//section[@id="certifications-section"]//h3').text
-                    institution_certification = self._driver.find_element_by_xpath('//section[@id="certifications-section"]//p[1]/span[2]').text
-                    duration_certification = self._driver.find_element_by_xpath('//section[@id="certifications-section"]//p[2]/span[2]').text
+                    name_certification = self._driver.find_element_by_xpath('//section[@class="certifications pp-section"]//h3').text
+                    institution_certification = self._driver.find_element_by_xpath('//section[@class="certifications pp-section"]//div/h4').text
+                    duration_certification = self._driver.find_element_by_xpath('//section[@class="certifications pp-section"]//div/span').text
                     certifications = {
                         "certification": name_certification,
                         "institution": institution_certification,
@@ -217,9 +213,9 @@ class GetDataProfile:
                     list_certification.append(certifications)
                 else:
                     for i in range(elements_certifications):
-                        name_certification = self._driver.find_element_by_xpath(f'//section[@id="certifications-section"]/ul/li[{i+1}]//h3').text
-                        institution_certification = self._driver.find_element_by_xpath(f'//section[@id="certifications-section"]/ul/li[{i+1}]//p[1]/span[2]').text
-                        duration_certification = self._driver.find_element_by_xpath(f'//section[@id="certifications-section"]/ul/li[{i+1}]//p[2]/span[2]').text
+                        name_certification = self._driver.find_element_by_xpath(f'//section[@class="certifications pp-section"]/ul/li[{i+1}]//h3').text
+                        institution_certification = self._driver.find_element_by_xpath(f'//section[@class="certifications pp-section"]/ul/li[{i+1}]/div/h4').text
+                        duration_certification = self._driver.find_element_by_xpath(f'//section[@class="certifications pp-section"]/ul/li[{i+1}]//div/span').text
                         certifications = {
                             "certification": name_certification,
                             "institution": institution_certification,
