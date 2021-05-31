@@ -108,14 +108,15 @@ class GetDataProfile:
         print(f'Nombre: {name} --- URL: {url_profile}')
 
         if self.is_student() and self.is_student_career() and self._files.student_exists(name):
+            # Experience section
+            elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@class="experience pp-section"]/ul/li[@class="experience-group experience-item"]'))
+            elements_experience = len(self._driver.find_elements_by_xpath('//section[@class="experience pp-section"]/ul/li'))
             try:
                 #self.exist_button()
-                elements_experience = len(self._driver.find_elements_by_xpath('//section[@class="experience pp-section"]/ul/li'))
-                elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]'))
                 if elements_experience == 1:
                     experience_position = self._driver.find_element_by_xpath('//section[@class="experience pp-section"]/ul/li//h3').text
-                    experience_company = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li//p[contains(@class, "pv-entity__secondary-title t-14")]').text
-                    experience_date = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li//h4[contains(@class, "pv-entity__date-range")]/span[not(@class)]').text
+                    experience_company = self._driver.find_element_by_xpath('//section[@class="experience pp-section"]/ul/li//h4').text
+                    experience_date = self._driver.find_element_by_xpath('//section[@class="experience pp-section"]/ul/li/div/div/p/span/span').text
 
                     experience = {
                         "responsibility": experience_position,
@@ -125,9 +126,9 @@ class GetDataProfile:
                     list_experience.append(experience)
                 else:
                     for i in range(elements_experience):
-                        experience_position = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i + 1}]/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]//h3').text
-                        experience_company = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i + 1}]/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]//p[contains(@class, "pv-entity__secondary-title t-14")]').text
-                        experience_date = self._driver.find_element_by_xpath(f'//section[@id="experience-section"]/ul/li[{i + 1}]/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]//h4[contains(@class, "pv-entity__date-range")]/span[not(@class)]').text
+                        experience_position = self._driver.find_element_by_xpath(f'//section[@class="experience pp-section"]/ul/li[{i + 1}]//h3').text
+                        experience_company = self._driver.find_element_by_xpath(f'//section[@class="experience pp-section"]/ul/li[{i + 1}]//h4').text
+                        experience_date = self._driver.find_element_by_xpath(f'//section[@class="experience pp-section"]/ul/li[{i + 1}]/div/div/p/span/span').text
 
                         experience = {
                             "responsibility": experience_position,
@@ -140,19 +141,21 @@ class GetDataProfile:
 
             # Experience extended format
             try:
-                elements_experience_extend_position = len(self._driver.find_elements_by_xpath('//ul[@class="pv-entity__position-group mt2"]/li'))
+                elements_experience_extend_position = len(self._driver.find_elements_by_xpath('//ul[@class="experience-group__positions"]/li'))
 
                 if elements_experience_extend == 1:
-                    experience_company = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]//div[@class="pv-entity__company-summary-info"]/h3/span[not(@class)]').text
-                    experience_date = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]//div[@class="pv-entity__company-summary-info"]/h4/span[not(@class)]').text
+                    experience_company = self._driver.find_element_by_xpath('//section[@class="experience pp-section"]/ul/li[@class="experience-group experience-item"]/a/div/div[2]/h4').text
+                    experience_date = self._driver.find_element_by_xpath('//section[@class="experience pp-section"]/ul/li[@class="experience-group experience-item"]/a/div/div[2]/p').text
                     for element in range(elements_experience_extend_position):
-                        responsibility = self._driver.find_element_by_xpath(f'//ul[@class="pv-entity__position-group mt2"]/li[{element+1}]//h3/span[not (@class)]').text
+                        responsibility = self._driver.find_element_by_xpath(f'//ul/li[@class="experience-group experience-item"]/ul[@class="experience-group__positions"]/li[{element+1}]/div/h3').text
                         duration = self._driver.find_element_by_xpath(f'//ul[@class="pv-entity__position-group mt2"]/li[{element+1}]//h4/span[not (@class)]').text
-                        location = self._driver.find_element_by_xpath(f'//ul[@class="pv-entity__position-group mt2"]/li[{element+1}]//h4[contains(@class, "location")]/span[2]').text
+                        location = self._driver.find_element_by_xpath(f'//ul/li[@class="experience-group experience-item"]/ul[@class="experience-group__positions"]/li[{element+1}]/div/div/p//span[@class="date-range__duration"]').text
+                        description_position = self._driver.find_element_by_xpath(f'//ul/li[@class="experience-group experience-item"]/ul[@class="experience-group__positions"]/li[{element+1}]/div//p[@class="show-more-less-text__text--less"]')
                         description = {
                             "responsibility": responsibility,
                             "duration": duration,
                             "location": location,
+                            "description_position": description_position
                             }
 
                         list_description.append(description)
@@ -163,7 +166,6 @@ class GetDataProfile:
                         "description": list_description
                     }
                     list_experience.append(experience)
-
             except NoSuchElementException as ex:
                 print(ex.msg)
 
