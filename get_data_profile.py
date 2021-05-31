@@ -4,6 +4,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from files import Files
 
+# Scraper without login
 
 class GetDataProfile:
     def __init__(self, driver):
@@ -24,10 +25,10 @@ class GetDataProfile:
 
     # Validate if the student with university education at CECAR
     def is_student(self):
-        elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
+        elements_education = len(self._driver.find_elements_by_xpath('//section[@class="education pp-section"]/ul/li'))
         if elements_education == 1:
             university_name = ''
-            university_name = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text).lower()
+            university_name = (self._driver.find_element_by_xpath('//section[@class="education pp-section"]/ul/li//h3').text).lower()
             print(f'Universidad: {university_name}')
             sleep(2)
             if university_name == "corporación universitaria del caribe":
@@ -37,7 +38,7 @@ class GetDataProfile:
         elif elements_education > 1:
             university_name = []
             for i in range(elements_education):
-                university_name.append((self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//h3').text).lower())
+                university_name.append((self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i+1}]//h3').text).lower())
                 print(university_name)
             print(f'Universidades: {university_name}')
             sleep(3)
@@ -51,22 +52,24 @@ class GetDataProfile:
         career = ['ingeniería de sistemas', 'ingeniería', 'ingeniero', 'desarrollador de software',
                   'ingeniero de sistemas', 'grado de ingeniería', 'grado en ingeniería de sistemas',
                   'grado en ingeniería', 'ciclo formativo de grado superior', 'ingeniería de software']
-        elements_career = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]'))
+        elements_career = len(self._driver.find_elements_by_xpath('//section[5]/ul/li/div/h4/span[1]'))
         if elements_career == 1:
-            career_degree = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower()
+            career_degree = ''
+            career_degree = self._driver.find_element_by_xpath('//section[5]/ul/li/div/h4/span[1]').text
+            career_degree = career_degree.lower()
             print(f'Carrera: {career_degree}')
             if career_degree in career:
                 return True
             else:
                 return False
         else:
+            career_degree = []
             count = 0
-            career_degree = [(self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower() for i in range(elements_career)]
+            career_degree = [(self._driver.find_element_by_xpath(f'//section[5]/ul/li[{i+1}]/div/h4/span[1]').text).lower() for i in range(elements_career)]
             print(f'Carreras: {career_degree}')
-            sleep(2)
+            sleep(1)
             for i in career_degree:
-                #career_degree.append((self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower())
-                if career_degree[i] in career:
+                if i in career:
                     count += 1
             if count > 0:
                 return True
@@ -94,18 +97,15 @@ class GetDataProfile:
         list_education = []
         list_certification = []
 
-        elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
-        elements_certifications = len(self._driver.find_elements_by_xpath('//section[@id="certifications-section"]/ul/li'))
-        #name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
+        elements_education = len(self._driver.find_elements_by_xpath('//section[@class="education pp-section"]/ul/li'))
+        elements_certifications = len(self._driver.find_elements_by_xpath('//section[@class="certifications pp-section"]/ul/li'))
 
         name = self._driver.find_element_by_xpath('//div/div/h1').text
-        if not name:
-            name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
 
-        #career = self._driver.find_element_by_xpath('//h2[@class="mt1 t-18 t-black t-normal break-words"]').text
-        career = self._driver.find_element_by_xpath('//div[contains(@class, "break-words")]').text
+        career = self._driver.find_element_by_xpath('//div/div/h2').text
         url_profile = self._driver.current_url
-        print(name)
+
+        print(f'Nombre: {name} --- URL: {url_profile}')
 
         if self.is_student() and self.is_student_career() and self._files.student_exists(name):
             try:
