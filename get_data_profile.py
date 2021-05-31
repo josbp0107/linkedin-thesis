@@ -30,14 +30,15 @@ class GetDataProfile:
             university_name = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text).lower()
             print(f'Universidad: {university_name}')
             sleep(2)
-            if university_name == "Corporación Universitaria del Caribe":
+            if university_name == "corporación universitaria del caribe":
                 return True
             else:
                 return False
-        else:
+        elif elements_education > 1:
             university_name = []
             for i in range(elements_education):
                 university_name.append((self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//h3').text).lower())
+                print(university_name)
             print(f'Universidades: {university_name}')
             sleep(3)
             if "corporación universitaria del caribe" in university_name:
@@ -53,7 +54,7 @@ class GetDataProfile:
         elements_career = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]'))
         if elements_career == 1:
             career_degree = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower()
-            print(f'Carreras: {career_degree}')
+            print(f'Carrera: {career_degree}')
             if career_degree in career:
                 return True
             else:
