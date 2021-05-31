@@ -172,14 +172,11 @@ class GetDataProfile:
             # Section Education
             try:
                 if elements_education == 1:
-                    education_name = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text
+                    education_name = self._driver.find_element_by_xpath('//section[@class="education pp-section"]/ul/li//h3').text
+                    education_description = self._driver.find_element_by_xpath('//section[@class="education pp-section"]/ul/li/div/h4/span[1]').text
 
-                    entity_degree_comma = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text
-
-                    education_description = entity_degree_comma
-
-                    education_time_from = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//p[contains (@class, "pv-entity__dates")]/span/time[1]').text
-                    education_time_to = self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//p[contains (@class, "pv-entity__dates")]/span/time[2]').text
+                    education_time_from = self._driver.find_element_by_xpath('//section[@class="education pp-section"]/ul/li/div/div//time[1]').text
+                    education_time_to = self._driver.find_element_by_xpath('//section[@class="education pp-section"]/ul/li/div/div//time[2]').text
                     education_time = f'{education_time_from} - {education_time_to}'
 
                     education = {
@@ -190,13 +187,11 @@ class GetDataProfile:
                     list_education.append(education)
                 else:
                     for i in range(elements_education):
-                        education_name = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//h3').text
-                        entity_degree_comma = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text
+                        education_name = self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i + 1}]//h3').text
+                        education_description = self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i + 1}]/div/h4/span[1]').text
 
-                        education_description = entity_degree_comma
-
-                        education_time_from = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//p[contains (@class, "pv-entity__dates")]/span/time[1]').text
-                        education_time_to = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//p[contains (@class, "pv-entity__dates")]/span/time[2]').text
+                        education_time_from = self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i + 1}]div/div//time[1]').text
+                        education_time_to = self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i + 1}]/div/div//time[2]').text
                         education_time = f'{education_time_from} - {education_time_to}'
 
                         education = {
