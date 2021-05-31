@@ -19,6 +19,7 @@ class GoogleTest(unittest.TestCase):
         file = Files()
 
         file.delete_json()
+        file.create_json_file()
 
         linkedin.open()
         linkedin.profile()
