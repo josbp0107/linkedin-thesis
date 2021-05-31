@@ -4,8 +4,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from files import Files
 
-# Scraper without login
 
+# Scraper without login
 class GetDataProfile:
     def __init__(self, driver):
         self._driver = driver
@@ -110,10 +110,10 @@ class GetDataProfile:
         if self.is_student() and self.is_student_career() and self._files.student_exists(name):
             try:
                 #self.exist_button()
-                elements_experience = len(self._driver.find_elements_by_xpath(f'//section[@id="experience-section"]/ul/li/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]'))
+                elements_experience = len(self._driver.find_elements_by_xpath('//section[@class="experience pp-section"]/ul/li'))
                 elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]'))
                 if elements_experience == 1:
-                    experience_position = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li//h3').text
+                    experience_position = self._driver.find_element_by_xpath('//section[@class="experience pp-section"]/ul/li//h3').text
                     experience_company = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li//p[contains(@class, "pv-entity__secondary-title t-14")]').text
                     experience_date = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li//h4[contains(@class, "pv-entity__date-range")]/span[not(@class)]').text
 
