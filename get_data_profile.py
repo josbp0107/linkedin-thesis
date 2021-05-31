@@ -38,10 +38,9 @@ class GetDataProfile:
             university_name = []
             for i in range(elements_education):
                 university_name.append((self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//h3').text).lower())
-                print(university_name)
             print(f'Universidades: {university_name}')
             sleep(3)
-            if "corporación universitaria del caribe" in university_name:
+            if "corporación universitaria del caribe" in university_name or "Corporación Universitaria del Caribe - CECAR" in university_name:
                 return True
             else:
                 return False
@@ -50,11 +49,11 @@ class GetDataProfile:
     def is_student_career(self):
         career = ['ingeniería de sistemas', 'ingeniería', 'ingeniero', 'desarrollador de software',
                   'ingeniero de sistemas', 'grado de ingeniería', 'grado en ingeniería de sistemas',
-                  'grado en ingeniería', 'ciclo formativo de grado superior', 'ingeniería de software']
+                  'grado en ingeniería', 'ciclo formativo de grado superior', 'ingeniería de software', 'diplomatura',
+                  'desarrollo de aplicativos moviles']
         elements_career = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]'))
         if elements_career == 1:
             career_degree = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower()
-            print(f'Carrera: {career_degree}')
             if career_degree in career:
                 return True
             else:
@@ -66,7 +65,7 @@ class GetDataProfile:
             sleep(2)
             for i in career_degree:
                 #career_degree.append((self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower())
-                if career_degree[i] in career:
+                if i in career:
                     count += 1
             if count > 0:
                 return True
@@ -109,7 +108,7 @@ class GetDataProfile:
 
         if self.is_student() and self.is_student_career() and self._files.student_exists(name):
             try:
-                #self.exist_button()
+                self.exist_button()
                 elements_experience = len(self._driver.find_elements_by_xpath(f'//section[@id="experience-section"]/ul/li/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]'))
                 elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]'))
                 if elements_experience == 1:
