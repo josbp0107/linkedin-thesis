@@ -1,6 +1,3 @@
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from time import sleep
 from get_data_profile import GetDataProfile
@@ -12,12 +9,6 @@ class StartBrowser:
         self._driver = driver
         self._url = 'https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&source=hp&ei=GvddYP_FN9KQ5gLItJ_QBw&iflsig=AINFCbYAAAAAYF4FKsf4407zMvunBoCXNyefbhjDpZqA&oq=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&gs_lcp=Cgdnd3Mtd2l6EANQiSFY5kBg5URoBXAAeAGAAZEBiAHqA5IBAzAuNJgBAKABAqABAaoBB2d3cy13aXqwAQA&sclient=gws-wiz&ved=0ahUKEwj_upnenM7vAhVSiFkKHUjaB3oQ4dUDCAc&uact=5'
         self._files = Files()
-
-    # Verifica que el sitio web de google haya cargado de forma correcta
-    @property
-    def is_loaded(self):
-        WebDriverWait(self._driver, 10).until(EC.presence_of_element_located((By.NAME, 'q')))
-        return True
 
     # call the url
     def open(self):
@@ -44,10 +35,10 @@ class StartBrowser:
     def profile(self):
         url_profile = self._driver.current_url
         get_data = GetDataProfile(self._driver)
+        elements_profile = len(self._driver.find_elements_by_xpath('//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div/div/div/div[1]/a'))
         page = 2
 
         while page < 25:
-            elements_profile = len(self._driver.find_elements_by_xpath('//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div/div/div/div[1]/a'))
             get_data.get_link_name_profile()
             sleep(2)
             try:
@@ -73,6 +64,25 @@ class StartBrowser:
                             sleep(1)
                             self._driver.execute_script("window.history.go(-1)")
                             sleep(5)
+                navigator_page = self._driver.find_element_by_link_text(f'{page}')
+                self._driver.execute_script("arguments[0].click();", navigator_page)
+                page += 1
+            except NoSuchElementException as ex:
+                print(ex.msg)
+
+        self._driver.get('https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&ei=eVy2YL6YG96CwbkP-ImU0Ak&oq=site%3Alinkedin.com%2Fin%2F+AND+%22sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&gs_lcp=Cgdnd3Mtd2l6EANQ9gxY2Q1gwhBoAXAAeACAAYMBiAHpApIBAzAuM5gBAKABAaoBB2d3cy13aXrAAQE&sclient=gws-wiz&ved=0ahUKEwj-uLDk6fbwAhVeQTABHfgEBZoQ4dUDCA4&uact=5')
+        page = 2
+        while page < 30:
+            get_data.get_link_name_profile()
+            sleep(2)
+            try:
+                for profile in range(elements_profile):
+                    profile_student = self._driver.find_element_by_xpath(f'//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[{profile + 1}]/div/div/div[1]/a')
+                    self._driver.execute_script("arguments[0].click();", profile_student)
+                    sleep(8)
+                    get_data.get_data_profile()
+                    self._driver.execute_script("window.history.go(-1)")
+                    sleep(3)
                 navigator_page = self._driver.find_element_by_link_text(f'{page}')
                 self._driver.execute_script("arguments[0].click();", navigator_page)
                 page += 1
