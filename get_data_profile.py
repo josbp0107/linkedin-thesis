@@ -31,7 +31,7 @@ class GetDataProfile:
             university_name = (self._driver.find_element_by_xpath('//section[@class="education pp-section"]/ul/li//h3').text).lower()
             print(f'Universidad: {university_name}')
             sleep(2)
-            if university_name == "corporación universitaria del caribe":
+            if university_name == "corporación universitaria del caribe" or university_name == "corporación universitaria del caribe cecar":
                 return True
             else:
                 return False
@@ -41,60 +41,52 @@ class GetDataProfile:
                 university_name.append((self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i+1}]//h3').text).lower())
             print(f'Universidades: {university_name}')
             sleep(3)
-            if "corporación universitaria del caribe" in university_name:
+            if "corporación universitaria del caribe" in university_name or "corporación universitaria del caribe cecar" in university_name:
                 return True
             else:
                 return False
 
     # Validate if student contains a degree as System engineer, engineer or others
     def is_student_career(self):
-        career = ['ingeniería de sistemas', 'ingeniería', 'ingeniero', 'desarrollador de software',
-                  'ingeniero de sistemas', 'grado de ingeniería', 'grado en ingeniería de sistemas',
-                  'grado en ingeniería', 'ciclo formativo de grado superior', 'ingeniería de software']
-        elements_career = len(self._driver.find_elements_by_xpath('//section[@class="education pp-section"]/ul/li/div/h4/span[1]'))
-        if elements_career == 1:
-            career_degree = ''
-            career_degree = (self._driver.find_element_by_xpath('//section[@class="education pp-section"]/ul/li/div/h4/span[1]').text).lower
-            print(f'Carrera: {career_degree}')
-            if career_degree in career:
-                return True
-            else:
-                return False
-        else:
-            career_degree = []
-            count = 0
-            career_degree = [(self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i+1}]/div/h4/span[1]').text).lower() for i in range(elements_career)]
-            print(f'Carreras: {career_degree}')
-            sleep(1)
-            for i in career_degree:
-                if i in career:
-                    count += 1
-            if count > 0:
-                return True
-            else:
-                return False
-
-    # Validate if exist button to more experience section
-    def exist_button(self):
         try:
-            button_see_more = self._driver.find_element_by_xpath('//section[@id="experience-section"]/div/button')
-            button_see_more.click()
-            print("#"*30)
-            sleep(4)
-        except:
-            print('Not found Experience section Button')
-            print("#" * 30)
+            career = ['ingeniería de sistemas', 'ingeniería', 'ingeniero', 'desarrollador de software',
+                      'ingeniero de sistemas', 'grado de ingeniería', 'grado en ingeniería de sistemas',
+                      'grado en ingeniería', 'ciclo formativo de grado superior', 'ingeniería de software', 'grado',
+                      'diplomatura', 'ingeníera de sistemas', 'ingeniera de sistemas']
+            elements_career = len(self._driver.find_elements_by_xpath('//section[@class="education pp-section"]/ul/li/div/h4/span[1]'))
+            if elements_career == 1:
+                career_degree = ''
+                career_degree = (self._driver.find_element_by_xpath('//section[@class="education pp-section"]/ul/li/div/h4/span[1]').text).lower()
+                print(f'Carrera: {career_degree}')
+                if career_degree in career:
+                    return True
+                else:
+                    return False
+            else:
+                career_degree = []
+                count = 0
+                career_degree = [(self._driver.find_element_by_xpath(f'//section[@class="education pp-section"]/ul/li[{i+1}]/div/h4/span[1]').text).lower() for i in range(elements_career)]
+                print(f'Carreras: {career_degree}')
+                sleep(1)
+                for i in career_degree:
+                    if i in career:
+                        count += 1
+                if count > 0:
+                    return True
+                else:
+                    return False
+        except NoSuchElementException as ex:
+            print(ex.msg)
 
     def get_data_profile(self):
-        data = {}
-        experience = {}
-        certifications = {}
 
         list_experience = []
         list_description = []
         list_education = []
         list_certification = []
 
+        elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@class="experience pp-section"]/ul/li[@class="experience-group experience-item"]'))
+        elements_experience = len(self._driver.find_elements_by_xpath('//section[@class="experience pp-section"]/ul/li'))
         elements_education = len(self._driver.find_elements_by_xpath('//section[@class="education pp-section"]/ul/li'))
         elements_certifications = len(self._driver.find_elements_by_xpath('//section[@class="certifications pp-section"]/ul/li'))
 
@@ -107,10 +99,7 @@ class GetDataProfile:
 
         if self.is_student() and self.is_student_career() and self._files.student_exists(name):
             # Experience section
-            elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@class="experience pp-section"]/ul/li[@class="experience-group experience-item"]'))
-            elements_experience = len(self._driver.find_elements_by_xpath('//section[@class="experience pp-section"]/ul/li'))
             try:
-                #self.exist_button()
                 if elements_experience == 1:
                     experience_position = self._driver.find_element_by_xpath('//section[@class="experience pp-section"]/ul/li//h3').text
                     experience_company = self._driver.find_element_by_xpath('//section[@class="experience pp-section"]/ul/li//h4').text
@@ -140,20 +129,18 @@ class GetDataProfile:
             # Experience extended format
             try:
                 elements_experience_extend_position = len(self._driver.find_elements_by_xpath('//ul[@class="experience-group__positions"]/li'))
-
                 if elements_experience_extend == 1:
                     experience_company = self._driver.find_element_by_xpath('//section[@class="experience pp-section"]/ul/li[@class="experience-group experience-item"]/a/div/div[2]/h4').text
                     experience_date = self._driver.find_element_by_xpath('//section[@class="experience pp-section"]/ul/li[@class="experience-group experience-item"]/a/div/div[2]/p').text
                     for element in range(elements_experience_extend_position):
                         responsibility = self._driver.find_element_by_xpath(f'//ul/li[@class="experience-group experience-item"]/ul[@class="experience-group__positions"]/li[{element+1}]/div/h3').text
-                        duration = self._driver.find_element_by_xpath(f'//ul[@class="pv-entity__position-group mt2"]/li[{element+1}]//h4/span[not (@class)]').text
-                        location = self._driver.find_element_by_xpath(f'//ul/li[@class="experience-group experience-item"]/ul[@class="experience-group__positions"]/li[{element+1}]/div/div/p//span[@class="date-range__duration"]').text
+                        duration = self._driver.find_element_by_xpath(f'//ul/li[@class="experience-group experience-item"]/ul[@class="experience-group__positions"]/li[{element+1}]/div/div/p//span[@class="date-range__duration"]').text
+                        location = self._driver.find_element_by_xpath(f'//ul/li[@class="experience-group experience-item"]/ul[@class="experience-group__positions"]/li[{element+1}]/div/div/p[contains(@class,"location")]').text
                         description = {
                             "responsibility": responsibility,
                             "duration": duration,
                             "location": location,
                             }
-
                         list_description.append(description)
 
                     experience = {
