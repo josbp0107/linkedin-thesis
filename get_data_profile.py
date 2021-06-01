@@ -1,7 +1,6 @@
 import json
 from time import sleep
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support.ui import WebDriverWait
 from files import Files
 
 
@@ -87,18 +86,19 @@ class GetDataProfile:
             print("#" * 30)
 
     def get_data_profile(self):
-        data = {}
-        experience = {}
-        certifications = {}
+        # data = {}
+        # experience = {}
+        # certifications = {}
 
         list_experience = []
         list_description = []
         list_education = []
         list_certification = []
 
+        elements_experience = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]'))
+        elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]'))
         elements_education = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li'))
         elements_certifications = len(self._driver.find_elements_by_xpath('//section[@id="certifications-section"]/ul/li'))
-        #name = self._driver.find_element_by_xpath('//li[@class="inline t-24 t-black t-normal break-words"]').text
 
         name = self._driver.find_element_by_xpath('//div/div/h1').text
         if name == '':
@@ -112,8 +112,7 @@ class GetDataProfile:
         if self.is_student() and self.is_student_career() and self._files.student_exists(name):
             try:
                 self.exist_button()
-                elements_experience = len(self._driver.find_elements_by_xpath(f'//section[@id="experience-section"]/ul/li/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]'))
-                elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]'))
+
                 if elements_experience == 1:
                     experience_position = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li//h3').text
                     experience_company = self._driver.find_element_by_xpath('//section[@id="experience-section"]/ul/li//p[contains(@class, "pv-entity__secondary-title t-14")]').text
