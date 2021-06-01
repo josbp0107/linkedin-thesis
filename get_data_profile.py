@@ -49,7 +49,8 @@ class GetDataProfile:
         try:
             career = ['ingeniería de sistemas', 'ingeniería', 'ingeniero','ingeniero de sistemas', 'grado de ingeniería',
                       'grado en ingeniería de sistemas','grado en ingeniería', 'ciclo formativo de grado superior',
-                      'ingeniería de software', 'diplomatura','desarrollo de aplicativos moviles', 'grado']
+                      'ingeniería de software', 'diplomatura','desarrollo de aplicativos moviles', 'grado',
+                      'ingeniera de sistemas', 'ingeníera de sistemas']
             elements_career = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]'))
             if elements_career == 1:
                 career_degree = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower()
@@ -64,7 +65,6 @@ class GetDataProfile:
                 print(f'Carreras: {career_degree}')
                 sleep(2)
                 for i in career_degree:
-                    #career_degree.append((self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower())
                     if i in career:
                         count += 1
                 if count > 0:
@@ -86,9 +86,6 @@ class GetDataProfile:
             print("#" * 30)
 
     def get_data_profile(self):
-        # data = {}
-        # experience = {}
-        # certifications = {}
 
         list_experience = []
         list_description = []
