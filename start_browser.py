@@ -55,8 +55,7 @@ class StartBrowser:
                     profile_student = self._driver.find_element_by_xpath(f'//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[{profile+1}]/div/div/div[1]/a')
                     if profile == 0 and page == 2:
                         self._files.create_json_file()
-                        self._driver.execute_script("arguments[0].click();", profile_student)
-                        #profile_student.click()
+                        self._driver.execute_script("arguments[0].click();", profile_student) # Click element profile_student
                         sleep(8)
                         self.login()
                         sleep(7)
@@ -64,8 +63,7 @@ class StartBrowser:
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(2)
                     else:
-                        #profile_student.click()
-                        self._driver.execute_script("arguments[0].click();", profile_student)
+                        self._driver.execute_script("arguments[0].click();", profile_student)  # Click element profile_student
                         if url_profile == 'https://www.linkedin.com/feed/':
                             sleep(3)
                             self._driver.execute_script("window.history.go(-1)")
@@ -75,10 +73,8 @@ class StartBrowser:
                             sleep(1)
                             self._driver.execute_script("window.history.go(-1)")
                             sleep(5)
-                #navigator_page = self._driver.find_element_by_xpath(f'//table/tbody/tr/td[{page+1}]/a')
                 navigator_page = self._driver.find_element_by_link_text(f'{page}')
                 self._driver.execute_script("arguments[0].click();", navigator_page)
-                #navigator_page.click()
                 page += 1
             except NoSuchElementException as ex:
                 print(ex.msg)
