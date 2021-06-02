@@ -17,7 +17,7 @@ class StartBrowser:
     # Method to login in linkedin and start to scraper
     def login(self):
         try:
-            self._driver.find_element_by_xpath('//p[starts-with(@class, "join")]/button').click()
+            self._driver.find_element_by_xpath('//nav/div/a[2]').click()
 
             with open('account.txt', 'r') as f:
                 line = f.readlines()
@@ -27,8 +27,7 @@ class StartBrowser:
             self._driver.find_element_by_name('session_key').send_keys(username)
             self._driver.find_element_by_name('session_password').send_keys(password)
             sleep(15)
-            self._driver.find_element_by_id('login-submit').click()
-            self._driver.execute_script("window.history.go(-1)")
+            self._driver.find_element_by_xpath('//button[@type="submit"]').click()
         except NoSuchElementException as ex:
             print(ex.msg)
 
