@@ -45,10 +45,10 @@ class StartBrowser:
                     profile_student = self._driver.find_element_by_xpath(f'//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[{profile+1}]/div/div/div[1]/a')
                     if profile == 0 and page == 2:
                         self._files.create_json_file()
-                        self._driver.execute_script("arguments[0].click();", profile_student) # Click element profile_student
+                        self._driver.execute_script("arguments[0].click();", profile_student)
                         sleep(8)
                         self.login()
-                        sleep(7)
+                        #sleep(7)
                         get_data.get_data_profile()
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(2)
