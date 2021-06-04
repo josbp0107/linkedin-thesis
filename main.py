@@ -21,6 +21,7 @@ class GoogleTest(unittest.TestCase):
         file.delete_json()
 
         linkedin.open()
+        linkedin.login()
         linkedin.profile()
 
         file.close_json_file()
