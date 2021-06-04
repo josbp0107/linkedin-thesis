@@ -4,21 +4,19 @@ from get_data_profile import GetDataProfile
 from files import Files
 
 
+# Test branch
 class StartBrowser:
     def __init__(self, driver):
         self._driver = driver
-        self._url = 'https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&source=hp&ei=GvddYP_FN9KQ5gLItJ_QBw&iflsig=AINFCbYAAAAAYF4FKsf4407zMvunBoCXNyefbhjDpZqA&oq=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&gs_lcp=Cgdnd3Mtd2l6EANQiSFY5kBg5URoBXAAeAGAAZEBiAHqA5IBAzAuNJgBAKABAqABAaoBB2d3cy13aXqwAQA&sclient=gws-wiz&ved=0ahUKEwj_upnenM7vAhVSiFkKHUjaB3oQ4dUDCAc&uact=5'
         self._files = Files()
 
     # call the url
     def open(self):
-        self._driver.get(self._url)
+        self._driver.get('https://www.linkedin.com')
 
     # Method to login in linkedin and start to scraper
     def login(self):
         try:
-            self._driver.find_element_by_xpath('//nav/div/a[2]').click()
-
             with open('account.txt', 'r') as f:
                 line = f.readlines()
                 username = line[0]
@@ -26,43 +24,52 @@ class StartBrowser:
 
             self._driver.find_element_by_name('session_key').send_keys(username)
             self._driver.find_element_by_name('session_password').send_keys(password)
-            sleep(15)
+            sleep(14)
             self._driver.find_element_by_xpath('//button[@type="submit"]').click()
+            sleep(3)
         except NoSuchElementException as ex:
             print(ex.msg)
 
-    def profile(self):
-        url_profile = self._driver.current_url
-        get_data = GetDataProfile(self._driver)
-        elements_profile = len(self._driver.find_elements_by_xpath('//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div/div/div/div[1]/a'))
-        page = 2
+    # Validate if url current is a student
+    def is_url_student(self):
+        url = self._driver.current_url
+        url_content = ['https://www.linkedin.com/feed/?trk=people-guest_profile-result-card_result-card_full-click',
+                       'https://www.linkedin.com/feed/']
+        sleep(2)
+        if url in url_content:
+            return False
+        else:
+            return True
 
-        while page < 25:
+    def profile(self):
+        self._driver.get('https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&source=hp&ei=GvddYP_FN9KQ5gLItJ_QBw&iflsig=AINFCbYAAAAAYF4FKsf4407zMvunBoCXNyefbhjDpZqA&oq=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&gs_lcp=Cgdnd3Mtd2l6EANQiSFY5kBg5URoBXAAeAGAAZEBiAHqA5IBAzAuNJgBAKABAqABAaoBB2d3cy13aXqwAQA&sclient=gws-wiz&ved=0ahUKEwj_upnenM7vAhVSiFkKHUjaB3oQ4dUDCAc&uact=5')
+        url_current = 'https://www.linkedin.com/feed/?trk=people-guest_profile-result-card_result-card_full-click'
+        get_data = GetDataProfile(self._driver)
+        elements_profile = len(self._driver.find_elements_by_xpath('//div[@id="rso"]/div[@class="g"]//a'))
+        page = 2
+        url = ''
+
+        self._files.create_json_file()
+        while page < 20:
             get_data.get_link_name_profile()
-            sleep(2)
+            sleep(1)
+            print("*" * 100)
+            print(page)
+            print("*" * 100)
             try:
                 for profile in range(elements_profile):
-                    profile_student = self._driver.find_element_by_xpath(f'//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[{profile+1}]/div/div/div[1]/a')
-                    if profile == 0 and page == 2:
-                        self._files.create_json_file()
-                        self._driver.execute_script("arguments[0].click();", profile_student)
-                        sleep(8)
-                        self.login()
-                        #sleep(7)
+                    profile_student = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div[@class="g"][{profile+1}]//a')
+                    self._driver.execute_script("arguments[0].click();", profile_student)
+                    url = self._driver.current_url
+                    sleep(1)
+                    if url != url_current:
+                        sleep(6)
                         get_data.get_data_profile()
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(2)
                     else:
-                        self._driver.execute_script("arguments[0].click();", profile_student)  # Click element profile_student
-                        if url_profile == 'https://www.linkedin.com/feed/':
-                            sleep(3)
-                            self._driver.execute_script("window.history.go(-1)")
-                        else:
-                            sleep(5)
-                            get_data.get_data_profile()
-                            sleep(1)
-                            self._driver.execute_script("window.history.go(-1)")
-                            sleep(5)
+                        sleep(3)
+                        self._driver.execute_script("window.history.go(-1)")
                 navigator_page = self._driver.find_element_by_link_text(f'{page}')
                 self._driver.execute_script("arguments[0].click();", navigator_page)
                 page += 1
@@ -72,16 +79,24 @@ class StartBrowser:
         self._driver.get('https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&ei=eVy2YL6YG96CwbkP-ImU0Ak&oq=site%3Alinkedin.com%2Fin%2F+AND+%22sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&gs_lcp=Cgdnd3Mtd2l6EANQ9gxY2Q1gwhBoAXAAeACAAYMBiAHpApIBAzAuM5gBAKABAaoBB2d3cy13aXrAAQE&sclient=gws-wiz&ved=0ahUKEwj-uLDk6fbwAhVeQTABHfgEBZoQ4dUDCA4&uact=5')
         page = 2
         while page < 30:
+            print("*" * 100)
+            print(page)
+            print("*" * 100)
             get_data.get_link_name_profile()
             sleep(2)
             try:
                 for profile in range(elements_profile):
-                    profile_student = self._driver.find_element_by_xpath(f'//div[7]/div/div[9]/div[1]/div/div[2]/div[2]/div/div/div[{profile + 1}]/div/div/div[1]/a')
+                    profile_student = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div[@class="g"][{profile+1}]//a')
                     self._driver.execute_script("arguments[0].click();", profile_student)
-                    sleep(8)
-                    get_data.get_data_profile()
-                    self._driver.execute_script("window.history.go(-1)")
-                    sleep(3)
+                    sleep(1)
+                    if url != url_current:
+                        sleep(8)
+                        get_data.get_data_profile()
+                        self._driver.execute_script("window.history.go(-1)")
+                        sleep(3)
+                    else:
+                        sleep(3)
+                        self._driver.execute_script("window.history.go(-1)")
                 navigator_page = self._driver.find_element_by_link_text(f'{page}')
                 self._driver.execute_script("arguments[0].click();", navigator_page)
                 page += 1
