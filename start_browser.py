@@ -43,14 +43,16 @@ class StartBrowser:
 
     def profile(self):
         self._driver.get('https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&source=hp&ei=GvddYP_FN9KQ5gLItJ_QBw&iflsig=AINFCbYAAAAAYF4FKsf4407zMvunBoCXNyefbhjDpZqA&oq=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&gs_lcp=Cgdnd3Mtd2l6EANQiSFY5kBg5URoBXAAeAGAAZEBiAHqA5IBAzAuNJgBAKABAqABAaoBB2d3cy13aXqwAQA&sclient=gws-wiz&ved=0ahUKEwj_upnenM7vAhVSiFkKHUjaB3oQ4dUDCAc&uact=5')
-        url_current = 'https://www.linkedin.com/feed/?trk=people-guest_profile-result-card_result-card_full-click'
+        url_current = ['https://www.linkedin.com/feed/?trk=people-guest_profile-result-card_result-card_full-click',
+                       'https://www.linkedin.com/'
+                       ]
         get_data = GetDataProfile(self._driver)
         elements_profile = len(self._driver.find_elements_by_xpath('//div[@id="rso"]/div[@class="g"]//a'))
         page = 2
         url = ''
 
         self._files.create_json_file()
-        while page < 20:
+        while page < 30:
             get_data.get_link_name_profile()
             sleep(1)
             print("*" * 100)
@@ -60,16 +62,17 @@ class StartBrowser:
                 for profile in range(elements_profile):
                     profile_student = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div[@class="g"][{profile+1}]//a')
                     self._driver.execute_script("arguments[0].click();", profile_student)
+                    sleep(6)
                     url = self._driver.current_url
-                    sleep(1)
-                    if url != url_current:
+                    print(url)
+                    if url in url_current:
+                        sleep(3)
+                        self._driver.execute_script("window.history.go(-1)")
+                    else:
                         sleep(6)
                         get_data.get_data_profile()
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(2)
-                    else:
-                        sleep(3)
-                        self._driver.execute_script("window.history.go(-1)")
                 navigator_page = self._driver.find_element_by_link_text(f'{page}')
                 self._driver.execute_script("arguments[0].click();", navigator_page)
                 page += 1
@@ -88,15 +91,17 @@ class StartBrowser:
                 for profile in range(elements_profile):
                     profile_student = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div[@class="g"][{profile+1}]//a')
                     self._driver.execute_script("arguments[0].click();", profile_student)
-                    sleep(1)
-                    if url != url_current:
-                        sleep(8)
+                    sleep(6)
+                    url = self._driver.current_url
+                    print(url)
+                    if url in url_current:
+                        sleep(3)
+                        self._driver.execute_script("window.history.go(-1)")
+                    else:
+                        sleep(6)
                         get_data.get_data_profile()
                         self._driver.execute_script("window.history.go(-1)")
-                        sleep(3)
-                    else:
-                        sleep(3)
-                        self._driver.execute_script("window.history.go(-1)")
+                        sleep(2)
                 navigator_page = self._driver.find_element_by_link_text(f'{page}')
                 self._driver.execute_script("arguments[0].click();", navigator_page)
                 page += 1
