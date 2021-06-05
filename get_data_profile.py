@@ -85,6 +85,24 @@ class GetDataProfile:
         except:
             print('Not found Experience section Button')
 
+    # Validate if exist button to more education section
+    def exist_button_education(self):
+        try:
+            button_education = self._driver.find_element_by_xpath('//section[@id="education-section"]//button')
+            button_education.click()
+            sleep(3)
+        except:
+            print('Not found Education Section Button')
+
+    # Validate if exist button to more certifications section
+    def exist_button_certification(self):
+        try:
+            button_education = self._driver.find_element_by_xpath('//section[@id="certifications-section"]//button')
+            button_education.click()
+            sleep(3)
+        except:
+            print('Not found Certifications Section Button')
+
     def get_data_profile(self):
 
         list_experience = []
@@ -99,6 +117,8 @@ class GetDataProfile:
         print(f'Nombre: {name} --- URL: {url_profile}')
 
         self.exist_button()
+        self.exist_button_education()
+        self.exist_button_certification()
 
         elements_experience = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[starts-with(@id, 1) or starts-with(@id, 7) or starts-with(@id, 8)]'))
         elements_experience_extend = len(self._driver.find_elements_by_xpath('//section[@id="experience-section"]/ul/li/section[contains(@id, "ember")]'))
