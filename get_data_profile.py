@@ -50,9 +50,9 @@ class GetDataProfile:
         try:
             career = ['ingeniería de sistemas', 'ingeniería', 'ingeniero','ingeniero de sistemas', 'grado de ingeniería',
                       'grado en ingeniería de sistemas','grado en ingeniería', 'ciclo formativo de grado superior',
-                      'ingeniería de software', 'diplomatura','desarrollo de aplicativos moviles', 'grado',
-                      'ingeniera de sistemas', 'ingeníera de sistemas','ingenieria de sistemas',
-                      'ingeniera de sistemas (systems engineer)', "engineer's degree"]
+                      'ingeniería de software', 'ingeniero de software', 'diplomatura','desarrollo de aplicativos moviles',
+                      'grado', 'ingeniera de sistemas', 'ingeníera de sistemas','ingenieria de sistemas', 'software enginner',
+                      'ingeniera de sistemas (systems engineer)', "engineer's degree", 'ingenieria de software', 'grado en ingeniería']
             elements_career = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]'))
             if elements_career == 1:
                 career_degree = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower()
