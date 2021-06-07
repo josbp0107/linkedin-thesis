@@ -26,7 +26,9 @@ class StartBrowser:
             self._driver.find_element_by_name('session_password').send_keys(password)
             sleep(14)
             self._driver.find_element_by_xpath('//button[@type="submit"]').click()
-            sleep(3)
+            sleep(4)
+            self._driver.get('https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&source=hp&ei=GvddYP_FN9KQ5gLItJ_QBw&iflsig=AINFCbYAAAAAYF4FKsf4407zMvunBoCXNyefbhjDpZqA&oq=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&gs_lcp=Cgdnd3Mtd2l6EANQiSFY5kBg5URoBXAAeAGAAZEBiAHqA5IBAzAuNJgBAKABAqABAaoBB2d3cy13aXqwAQA&sclient=gws-wiz&ved=0ahUKEwj_upnenM7vAhVSiFkKHUjaB3oQ4dUDCAc&uact=5')
+
         except NoSuchElementException as ex:
             print(ex.msg)
 
@@ -42,7 +44,7 @@ class StartBrowser:
             return True
 
     def profile(self):
-        self._driver.get('https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&source=hp&ei=GvddYP_FN9KQ5gLItJ_QBw&iflsig=AINFCbYAAAAAYF4FKsf4407zMvunBoCXNyefbhjDpZqA&oq=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&gs_lcp=Cgdnd3Mtd2l6EANQiSFY5kBg5URoBXAAeAGAAZEBiAHqA5IBAzAuNJgBAKABAqABAaoBB2d3cy13aXqwAQA&sclient=gws-wiz&ved=0ahUKEwj_upnenM7vAhVSiFkKHUjaB3oQ4dUDCAc&uact=5')
+        # self._driver.get('https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&source=hp&ei=GvddYP_FN9KQ5gLItJ_QBw&iflsig=AINFCbYAAAAAYF4FKsf4407zMvunBoCXNyefbhjDpZqA&oq=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22Corporacion+Universitaria+del+Caribe%22&gs_lcp=Cgdnd3Mtd2l6EANQiSFY5kBg5URoBXAAeAGAAZEBiAHqA5IBAzAuNJgBAKABAqABAaoBB2d3cy13aXqwAQA&sclient=gws-wiz&ved=0ahUKEwj_upnenM7vAhVSiFkKHUjaB3oQ4dUDCAc&uact=5')
         url_current = ['https://www.linkedin.com/feed/?trk=people-guest_profile-result-card_result-card_full-click',
                        'https://www.linkedin.com/'
                        ]
@@ -65,7 +67,9 @@ class StartBrowser:
                     sleep(6)
                     url = self._driver.current_url
                     print(url)
-                    if url in url_current:
+                    name = len(self._driver.find_elements_by_xpath('//main/div/section/div[2]/div[2]/div/div[1]/h1'))
+                    print(f'Contador nombre: {name}')
+                    if url in url_current or name == 0:
                         sleep(3)
                         self._driver.execute_script("window.history.go(-1)")
                     else:
@@ -94,7 +98,9 @@ class StartBrowser:
                     sleep(6)
                     url = self._driver.current_url
                     print(url)
-                    if url in url_current:
+                    name = len(self._driver.find_elements_by_xpath('//main/div/section/div[2]/div[2]/div/div[1]/h1'))
+                    print(f'Contador nombre: {name}')
+                    if url in url_current or name == 0:
                         sleep(3)
                         self._driver.execute_script("window.history.go(-1)")
                     else:
