@@ -32,17 +32,6 @@ class StartBrowser:
         except NoSuchElementException as ex:
             print(ex.msg)
 
-    # Validate if url current is a student
-    def is_url_student(self):
-        url = self._driver.current_url
-        url_content = ['https://www.linkedin.com/feed/?trk=people-guest_profile-result-card_result-card_full-click',
-                       'https://www.linkedin.com/feed/']
-        sleep(2)
-        if url in url_content:
-            return False
-        else:
-            return True
-
     def profile(self):
         url_current = ['https://www.linkedin.com/feed/?trk=people-guest_profile-result-card_result-card_full-click',
                        'https://www.linkedin.com/'
