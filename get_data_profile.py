@@ -30,7 +30,7 @@ class GetDataProfile:
             university_name = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text).lower()
             print(f'Universidad: {university_name}')
             sleep(2)
-            if university_name == "corporación universitaria del caribe":
+            if university_name == "corporación universitaria del caribe" or university_name == 'CECAR' or university_name == 'Corporación Universitaria del Caribe CECAR':
                 return True
             else:
                 return False
@@ -40,7 +40,7 @@ class GetDataProfile:
                 university_name.append((self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//h3').text).lower())
             print(f'Universidades: {university_name}')
             sleep(3)
-            if "corporación universitaria del caribe" in university_name or "Corporación Universitaria del Caribe - CECAR" in university_name:
+            if "corporación universitaria del caribe" in university_name or "Corporación Universitaria del Caribe - CECAR" in university_name or "CECAR" in university_name or 'Corporación Universitaria del Caribe CECAR' in university_name:
                 return True
             else:
                 return False
@@ -53,10 +53,11 @@ class GetDataProfile:
                       'ingeniería de software', 'ingeniero de software', 'diplomatura','desarrollo de aplicativos moviles',
                       'grado', 'ingeniera de sistemas', 'ingeníera de sistemas','ingenieria de sistemas', 'software enginner',
                       'ingeniera de sistemas (systems engineer)', "engineer's degree", 'ingenieria de software', 'grado en ingeniería']
-            elements_career = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]'))
+            #elements_career = len(self._driver.find_elements_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]'))
+            elements_career = len(self._driver.find_elements_by_xpath('//section//section/ul/li/div/div/a/div[2]/div/p[1]/span[2]'))
             if elements_career == 1:
                 career_degree = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower()
-                print(career_degree)
+                print(f'Carrera: {career_degree}')
                 if career_degree in career:
                     return True
                 else:
