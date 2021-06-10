@@ -120,10 +120,41 @@ class StartBrowser:
                     name = len(self._driver.find_elements_by_xpath('//main/div/section/div[2]/div[2]/div/div[1]/h1'))
                     print(f'Contador nombre: {name}')
                     if url in url_current or name == 0:
-                        sleep(3)
+                        sleep(2)
                         self._driver.execute_script("window.history.go(-1)")
                     else:
-                        sleep(6)
+                        sleep(5)
+                        get_data.get_data_profile()
+                        self._driver.execute_script("window.history.go(-1)")
+                        sleep(2)
+                navigator_page = self._driver.find_element_by_link_text(f'{page}')
+                self._driver.execute_script("arguments[0].click();", navigator_page)
+                page += 1
+            except NoSuchElementException as ex:
+                print(ex.msg)
+
+        self._driver.get('https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22CECAR%22&biw=1440&bih=447&ei=ayXAYOGuMu6o5NoP6Zuj-AE&oq=site%3Alinkedin.com%2Fin%2F+AND+%22ingenieria+de+sistemas%22+AND+%22CECAR%22&gs_lcp=Cgdnd3Mtd2l6EANQAFgAYJ7Ed2gBcAB4AIABhAGIAYQBkgEDMC4xmAEAqgEHZ3dzLXdpesABAQ&sclient=gws-wiz&ved=0ahUKEwihkILYvonxAhVuFFkFHenNCB84HhDh1QMIDg&uact=5')
+        page = 2
+        while page < 13:
+            print("*" * 100)
+            print(page)
+            print("*" * 100)
+            get_data.get_link_name_profile()
+            sleep(2)
+            try:
+                for profile in range(elements_profile):
+                    profile_student = self._driver.find_element_by_xpath(f'//div[@id="rso"]/div[@class="g"][{profile + 1}]//a')
+                    self._driver.execute_script("arguments[0].click();", profile_student)
+                    sleep(6)
+                    url = self._driver.current_url
+                    print(url)
+                    name = len(self._driver.find_elements_by_xpath('//main/div/section/div[2]/div[2]/div/div[1]/h1'))
+                    print(f'Contador nombre: {name}')
+                    if url in url_current or name == 0:
+                        sleep(2)
+                        self._driver.execute_script("window.history.go(-1)")
+                    else:
+                        sleep(5)
                         get_data.get_data_profile()
                         self._driver.execute_script("window.history.go(-1)")
                         sleep(2)
