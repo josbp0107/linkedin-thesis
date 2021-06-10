@@ -30,7 +30,7 @@ class GetDataProfile:
             university_name = (self._driver.find_element_by_xpath('//section[@id="education-section"]/ul/li//h3').text).lower()
             print(f'Universidad: {university_name}')
             sleep(2)
-            if university_name == "corporación universitaria del caribe" or university_name == 'CECAR' or university_name == 'Corporación Universitaria del Caribe CECAR':
+            if university_name == "corporación universitaria del caribe" or university_name == 'cecar' or university_name == 'corporación universitaria del caribe cecar':
                 return True
             else:
                 return False
@@ -40,7 +40,7 @@ class GetDataProfile:
                 university_name.append((self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//h3').text).lower())
             print(f'Universidades: {university_name}')
             sleep(3)
-            if "corporación universitaria del caribe" in university_name or "Corporación Universitaria del Caribe - CECAR" in university_name or "CECAR" in university_name or 'Corporación Universitaria del Caribe CECAR' in university_name:
+            if "corporación universitaria del caribe" in university_name or "corporación universitaria del caribe - cecar" in university_name or "cecar" in university_name or 'corporación universitaria del caribe cecar' in university_name:
                 return True
             else:
                 return False
@@ -64,7 +64,8 @@ class GetDataProfile:
                     return False
             else:
                 count = 0
-                career_degree = [(self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower() for i in range(elements_career)]
+                career_degree = [(self._driver.find_element_by_xpath(f'//section//section/ul/li[{i+1}]/div/div/a/div[2]/div/p[1]/span[2]').text).lower() for i in range(elements_career)]
+                #career_degree = [(self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i+1}]//div[@class="pv-entity__degree-info"]/p[contains(@class, "pv-entity__degree-name")]/span[@class="pv-entity__comma-item"]').text).lower() for i in range(elements_career)]
                 print(f'Carreras: {career_degree}')
                 sleep(2)
                 for i in career_degree:
@@ -205,7 +206,8 @@ class GetDataProfile:
                 else:
                     for i in range(elements_education):
                         education_name = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//h3').text
-                        entity_degree_comma = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text
+                        #entity_degree_comma = self._driver.find_element_by_xpath(f'//section[@id="education-section"]/ul/li[{i + 1}]//div[@class="pv-entity__degree-info"]/p/span[@class="pv-entity__comma-item"]').text
+                        entity_degree_comma = self._driver.find_element_by_xpath(f'//section//section/ul/li[{i+1}]/div/div/a/div[2]/div/p[1]/span[2]').text
 
                         education_description = entity_degree_comma
 
