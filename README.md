@@ -34,7 +34,7 @@ Windows
 
 Es necesario agregar un nuevo archivo el cual contendrá el las credenciales del usuario de LinkedIn.
 
-Es recomendable nombrar este archivo como ** account.txt**
+Es recomendable nombrar este archivo como **account.txt**
 
 ### Ejecutar 
 
