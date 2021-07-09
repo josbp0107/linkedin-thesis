@@ -2,9 +2,10 @@ import ijson
 import csv
 from itertools import zip_longest
 
-
+# File with data scraped
 FILE_JSON_DATA = 'dataprueba.json'
 
+# Files with struct
 FILE_CSV_EXPERIENCE = 'data_process_experience.csv'
 FILE_CSV_EDUCATION = 'data_process_education.csv'
 FILE_CSV_CERTIFICATION = 'data_process_certification.csv'
