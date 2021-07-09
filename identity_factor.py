@@ -56,6 +56,34 @@ def fact_ident_experience(filecsv):
         writer.writerows(export_data)
 
 
+def fact_ident_education(filecsv):
+    """Extract all data education of json, then process it and finally wirte the clean data to csv file called
+    data_process_education.csv"""
+
+    header = ['institution', 'degree', 'duration']
+
+    with open(FILE_JSON_DATA, 'rb') as f:
+        data_json_institution = ijson.items(f, 'item.education.item.institution')
+        institution = [obj for obj in data_json_institution]
+
+    with open(FILE_JSON_DATA, 'rb') as f:
+        data_json_degree = ijson.items(f, 'item.education.item.degree')
+        degree = [obj for obj in data_json_degree]
+
+    with open(FILE_JSON_DATA, 'rb') as f:
+        data_json_duration = ijson.items(f, 'item.education.item.duration')
+        duration = [obj for obj in data_json_duration]
+
+    d = [institution, degree, duration]
+
+    export_data = zip_longest(*d, fillvalue='Null')
+
+    with open(filecsv, 'w+', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(header)
+        writer.writerows(export_data)
+
+
 if __name__ == '__main__':
     fact_ident_experience(FILECSV)
 
