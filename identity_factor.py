@@ -2,7 +2,7 @@ import ijson
 import csv
 from itertools import zip_longest
 
-
+FILE_JSON_DATA = 'dataprueba.json'
 FILECSV = 'data_process.csv'
 
 
@@ -54,25 +54,6 @@ def fact_ident_experience(filecsv):
         writer = csv.writer(csvfile)
         writer.writerow(header)
         writer.writerows(export_data)
-
-        # for row in responsibility:
-        #     print(responsibility[row],",",duration[row],",","Null")
-
-
-def run():
-    file = 'dataprueba.json'
-
-    with open(file, 'rb') as f:
-        data_json = ijson.items(f, 'item.work.item.responsibility')
-
-        responsibility = [obj for obj in data_json]
-
-    with open(file, 'rb') as f:
-        data_json_extend = ijson.items(f, 'item.work.item.description.item.responsibility')
-
-        responsibility_extends = [obj for obj in data_json_extend]
-
-    return responsibility + responsibility_extends
 
 
 if __name__ == '__main__':
