@@ -2,8 +2,13 @@ import ijson
 import csv
 from itertools import zip_longest
 
+# File with data scraped
+FILE_JSON_DATA = 'dataprueba.json'
 
-FILECSV = 'data_process.csv'
+# Files with struct
+FILE_CSV_EXPERIENCE = 'data_process_experience.csv'
+FILE_CSV_EDUCATION = 'data_process_education.csv'
+FILE_CSV_CERTIFICATION = 'data_process_certification.csv'
 
 
 def fact_ident_experience(filecsv):
@@ -55,26 +60,66 @@ def fact_ident_experience(filecsv):
         writer.writerow(header)
         writer.writerows(export_data)
 
-        # for row in responsibility:
-        #     print(responsibility[row],",",duration[row],",","Null")
+
+def fact_ident_education(filecsv):
+    """Extract all data education of json, then process it and finally wirte the clean data to csv file called
+    data_process_education.csv"""
+
+    header = ['institution', 'degree', 'duration']
+
+    with open(FILE_JSON_DATA, 'rb') as f:
+        data_json_institution = ijson.items(f, 'item.education.item.institution')
+        institution = [obj for obj in data_json_institution]
+
+    with open(FILE_JSON_DATA, 'rb') as f:
+        data_json_degree = ijson.items(f, 'item.education.item.degree')
+        degree = [obj for obj in data_json_degree]
+
+    with open(FILE_JSON_DATA, 'rb') as f:
+        data_json_duration = ijson.items(f, 'item.education.item.duration')
+        duration = [obj for obj in data_json_duration]
+
+    d = [institution, degree, duration]
+
+    export_data = zip_longest(*d, fillvalue='Null')
+
+    with open(filecsv, 'w+', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(header)
+        writer.writerows(export_data)
 
 
-def run():
-    file = 'dataprueba.json'
+def fact_ident_certifications(filecsv):
+    """Extract all data certifications of json, then process it and finally wirte the clean data to csv file called
+    data_process_certification.csv"""
 
-    with open(file, 'rb') as f:
-        data_json = ijson.items(f, 'item.work.item.responsibility')
+    header = ['certification', 'institution', 'duration']
 
-        responsibility = [obj for obj in data_json]
+    with open(FILE_JSON_DATA, 'rb') as f:
+        data_json_certification = ijson.items(f, 'item.certification.item.certification')
+        certification = [obj for obj in data_json_certification]
 
-    with open(file, 'rb') as f:
-        data_json_extend = ijson.items(f, 'item.work.item.description.item.responsibility')
+    with open(FILE_JSON_DATA, 'rb') as f:
+        data_json_institution = ijson.items(f, 'item.certification.item.institution')
+        institution = [obj for obj in data_json_institution]
 
-        responsibility_extends = [obj for obj in data_json_extend]
+    with open(FILE_JSON_DATA, 'rb') as f:
+        data_json_duration = ijson.items(f, 'item.certification.item.duration')
+        duration = [obj for obj in data_json_duration]
 
-    return responsibility + responsibility_extends
+    d = [certification, institution, duration]
+
+    export_data = zip_longest(*d, fillvalue='Null')
+
+    with open(filecsv, 'w+', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(header)
+        writer.writerows(export_data)
 
 
 if __name__ == '__main__':
-    fact_ident_experience(FILECSV)
+    fact_ident_experience(FILE_CSV_EXPERIENCE)
+    fact_ident_education(FILE_CSV_EDUCATION)
+    fact_ident_certifications(FILE_CSV_CERTIFICATION)
+
 
