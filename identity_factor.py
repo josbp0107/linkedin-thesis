@@ -3,12 +3,12 @@ import csv
 from itertools import zip_longest
 
 # File with data scraped
-FILE_JSON_DATA = 'dataprueba.json'
+FILE_JSON_DATA = 'dataprocess/dataprueba.json'
 
 # Files with struct
-FILE_CSV_EXPERIENCE = 'data_process_experience.csv'
-FILE_CSV_EDUCATION = 'data_process_education.csv'
-FILE_CSV_CERTIFICATION = 'data_process_certification.csv'
+FILE_CSV_EXPERIENCE = 'dataprocess/data_process_experience.csv'
+FILE_CSV_EDUCATION = 'dataprocess/data_process_education.csv'
+FILE_CSV_CERTIFICATION = 'dataprocess/data_process_certification.csv'
 
 
 def fact_ident_experience(filecsv):
