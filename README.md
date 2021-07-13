@@ -32,11 +32,11 @@ Windows
 
 ### Archivos requeridos
 
-Es necesario agregar un nuevo archivo el cual contendrá el las credenciales del usuario de LinkedIn.
+Es necesario agregar un nuevo archivo el cual contendrá las credenciales del usuario de LinkedIn.
 
 Es recomendable nombrar este archivo como **account.txt**
 
-### Ejecutar 
+### Ejecutar proyecto 
 
 Linux & Mac
 
