@@ -1,3 +1,4 @@
+import pandas as pd
 import ijson
 import csv
 from itertools import zip_longest
@@ -9,6 +10,17 @@ FILE_JSON_DATA = 'dataprocess/dataprueba.json'
 FILE_CSV_EXPERIENCE = 'dataprocess/data_process_experience.csv'
 FILE_CSV_EDUCATION = 'dataprocess/data_process_education.csv'
 FILE_CSV_CERTIFICATION = 'dataprocess/data_process_certification.csv'
+
+# List to compare
+LIST_ING_DESARROLLO_ANALISIS = ['desarrollador', 'ingeniero de sistemas', 'ingeniero', 'sistemas', 'freelance']
+LIST_ADM_BD = ['dato', 'datos']
+LIST_ADM_REDES = ['redes', 'administrador de redes', 'administrador', 'soporte de red', 'red']
+LIST_ING_SOPORTE = ['soporte', 'mantenimiento']
+LIST_ADM_SERIVICIO = ['administrador de servicio', 'servicio', 'informaticos', 'informatico', 'servicio informatico', 'servicios informaticos']
+LIST_DEV_SOLUCIONES = ['desarrolador de soluciones', 'soluciones']
+DEV_SIS_INFORMATICOS = ['sistemas informaticos', 'desarrollador de soluciones informaticos']
+INVESTIGADOR = ['investigador']
+GESTOR_PROYECTO = ['gestor', 'gestor de proyectos', 'gestora de proyectos']
 
 
 def fact_ident_experience(filecsv):
@@ -117,9 +129,42 @@ def fact_ident_certifications(filecsv):
         writer.writerows(export_data)
 
 
-if __name__ == '__main__':
-    fact_ident_experience(FILE_CSV_EXPERIENCE)
-    fact_ident_education(FILE_CSV_EDUCATION)
-    fact_ident_certifications(FILE_CSV_CERTIFICATION)
+def data_classification():
+    desarrollador, admin_bd, admin_red, soporte, admin_servicio, dev_soluciones, dev_sistemas, investigador, gestor_proyec = [], [], [], [], [], [], [], [], []
+    count_desarrollador, count_admin_bd, count_admin_red = 0, 0, 0
+    with open(FILE_CSV_EXPERIENCE, "r", encoding="utf-8") as file_csv:
+        reader = csv.DictReader(file_csv)
+        for row in reader:
+            row_res = row["responsibility"].lower().split(" ")
+            if row_res[0] in LIST_ING_DESARROLLO_ANALISIS and not row_res.__contains__("bases"):
+                count_desarrollador += 1
+                desarrollador.append(row["responsibility"])
+            elif row_res.__contains__('dato') or row_res.__contains__('datos') or row_res.__contains__('bases'):
+                count_admin_bd += 1
+                admin_bd.append(row["responsibility"])
+            elif row_res.__contains__('redes') or row_res.__contains__('red'):
+                count_admin_red +=1
+                admin_red.append(row["responsibility"])
 
+    print("*"*20, "Total de desarrollador", "*"*20)
+    print(count_desarrollador)
+    print("*"*20, " DESARROLLADOR ", "*"*20)
+    print(desarrollador)
+
+    print("*"*20, "Total de administrador de bd: ", "*"*20)
+    print(count_admin_bd)
+    print("*" * 20, " ADMINISTRADOR DE BASE DE DATOS ", "*" * 20)
+    print(admin_bd)
+
+    print("*" * 20, "Total de administrador de red: ", "*" * 20)
+    print(count_admin_red)
+    print("*" * 20, " ADMINISTRADOR DE REDES ", "*" * 20)
+    print(admin_red)
+
+
+if __name__ == '__main__':
+    # fact_ident_experience(FILE_CSV_EXPERIENCE)
+    # fact_ident_education(FILE_CSV_EDUCATION)
+    # fact_ident_certifications(FILE_CSV_CERTIFICATION)
+    data_classification()
 
