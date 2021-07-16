@@ -136,32 +136,41 @@ def data_classification():
     with open(FILE_CSV_EXPERIENCE, "r", encoding="utf-8") as file_csv:
         reader = csv.DictReader(file_csv)
         for row in reader:
-            contador_total += 1
+            contador_total += 1  # Count line of csv file
             row_res = row["responsibility"].lower().split(" ")
+            # Ingeniero de Desarrollo y Análisis de Software.
             if row_res[0] in LIST_ING_DESARROLLO_ANALISIS and not row_res.__contains__("bases"):
                 count_desarrollador += 1
                 desarrollador.append(row["responsibility"])
+            # Administrador de Bases de datos
             elif row_res.__contains__('dato') or row_res.__contains__('datos') or row_res.__contains__('bases'):
                 count_admin_bd += 1
                 admin_bd.append(row["responsibility"])
+            # Administrador redes de computadores
             elif row_res.__contains__('redes') or row_res.__contains__('red'):
                 count_admin_red += 1
                 admin_red.append(row["responsibility"])
+            # Ingeniero de Soporte y/o mantenimiento
             elif row_res.__contains__('soporte') or row_res.__contains__('tecnico') and not row_res.__contains__("desarrollador") and not row_res.__contains__("desarrollo"):
                 count_soporte += 1
                 soporte.append(row["responsibility"])
+            # Administrador de servicios informáticos
             elif row_res.__contains__('administrador') and not row_res.__contains__("bases") and not row_res.__contains__("red"):
                 count_adm_servicio += 1
                 admin_servicio.append(row["responsibility"])
+            # Desarrollador de Soluciones Integrales
             elif row_res.__contains__("soluciones") or row_res.__contains__("arquitecto"):
                 count_dev_solucion += 1
                 dev_soluciones.append(row["responsibility"])
+            # Desarrollador de Sistemas Informáticos
             elif row_res.__contains__("informatico") or row_res.__contains__("informatica") or row_res.__contains__("sistemas") or row_res.__contains__("webmaster"):
                 count_dev_sistemas += 1
                 dev_sistemas.append(row["responsibility"])
+            # Investigador
             elif row_res.__contains__("docente") or row_res.__contains__("investigador"):
                 count_investigador += 1
                 investigador.append(row["responsibility"])
+            # Gestor de proyectos de ingeniería
             elif row_res.__contains__('proyecto') or row_res.__contains__('gestor'):
                 count_gest_proyect += 1
                 gestor_proyec.append(row["responsibility"])
