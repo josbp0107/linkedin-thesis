@@ -130,16 +130,18 @@ def fact_ident_certifications(filecsv):
 
 
 def data_classification():
-    desarrollador, admin_bd, admin_red, soporte, admin_servicio, dev_soluciones, dev_sistemas, investigador, gestor_proyec = [], [], [], [], [], [], [], [], []
-    count_desarrollador, count_admin_bd, count_admin_red, count_soporte, count_adm_servicio, count_dev_solucion, count_dev_sistemas, count_investigador, count_gest_proyect = 0, 0, 0, 0, 0, 0, 0, 0, 0
+    desarrollador, admin_bd, admin_red, soporte, admin_servicio, dev_soluciones, dev_sistemas, investigador, gestor_proyec, others = [], [], [], [], [], [], [], [], [], []
+    count_desarrollador, count_admin_bd, count_admin_red, count_soporte, count_adm_servicio, count_dev_solucion, count_dev_sistemas, count_investigador, count_gest_proyect, count_others = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     contador_total = 0
     with open(FILE_CSV_EXPERIENCE, "r", encoding="utf-8") as file_csv:
         reader = csv.DictReader(file_csv)
         for row in reader:
-            contador_total += 1  # Count line of csv file
             row_res = row["responsibility"].lower().split(" ")
+            if row_res.__contains__("null"):
+                continue
+
             # Ingeniero de Desarrollo y Análisis de Software.
-            if row_res[0] in LIST_ING_DESARROLLO_ANALISIS and not row_res.__contains__("bases"):
+            if row_res[0] in LIST_ING_DESARROLLO_ANALISIS or row_res.__contains__("consultor") or row_res.__contains__("analyst") or row_res.__contains__("engineer") and not row_res.__contains__("bases"):
                 count_desarrollador += 1
                 desarrollador.append(row["responsibility"])
             # Administrador de Bases de datos
@@ -155,7 +157,7 @@ def data_classification():
                 count_soporte += 1
                 soporte.append(row["responsibility"])
             # Administrador de servicios informáticos
-            elif row_res.__contains__('administrador') and not row_res.__contains__("bases") and not row_res.__contains__("red"):
+            elif row_res.__contains__('administrador') or row_res.__contains__('seguridad') and not row_res.__contains__("bases") and not row_res.__contains__("red"):
                 count_adm_servicio += 1
                 admin_servicio.append(row["responsibility"])
             # Desarrollador de Soluciones Integrales
@@ -163,7 +165,7 @@ def data_classification():
                 count_dev_solucion += 1
                 dev_soluciones.append(row["responsibility"])
             # Desarrollador de Sistemas Informáticos
-            elif row_res.__contains__("informatico") or row_res.__contains__("informatica") or row_res.__contains__("sistemas") or row_res.__contains__("webmaster"):
+            elif row_res.__contains__("informatico") or row_res.__contains__("informatica") or row_res.__contains__("sistemas") or row_res.__contains__("webmaster") and not row_res.__contains__('seguridad'):
                 count_dev_sistemas += 1
                 dev_sistemas.append(row["responsibility"])
             # Investigador
@@ -174,6 +176,10 @@ def data_classification():
             elif row_res.__contains__('proyecto') or row_res.__contains__('gestor'):
                 count_gest_proyect += 1
                 gestor_proyec.append(row["responsibility"])
+            else:
+                count_others += 1
+                others.append(row["responsibility"])
+            contador_total += 1  # Count line of csv file
 
     print("*"*20, "Total de desarrollador: ", "*"*20)
     print(count_desarrollador)
@@ -220,8 +226,26 @@ def data_classification():
     print("*" * 20, " GESTOR DE PROYECTOS DE INGENIERIA ", "*" * 20)
     print(gestor_proyec)
 
+    print("*" * 20, "Total de Otros perfiles: ", "*" * 20)
+    print(count_others)
+    print("*" * 20, " OTROS PERFILES ", "*" * 20)
+    print(others)
+
+    print("")
+
     print(contador_total)
-    print(count_gest_proyect + count_desarrollador + count_admin_bd + count_admin_red + count_soporte + count_adm_servicio + count_dev_solucion + count_dev_sistemas + count_investigador)
+    print(count_others + count_gest_proyect + count_desarrollador + count_admin_bd + count_admin_red + count_soporte + count_adm_servicio + count_dev_solucion + count_dev_sistemas + count_investigador)
+
+    work_profile = desarrollador + admin_bd + admin_red + soporte + admin_servicio + dev_soluciones + dev_sistemas + investigador + gestor_proyec
+
+    # Write all work profile that extract from data_process_experience.csv
+    with open('identity_factor.csv', 'w+', encoding='utf-8') as f:
+        header = ["responsibility"]
+        writer = csv.writer(f)
+        d = [work_profile]
+        export_data = zip_longest(*d)
+        writer.writerow(header)
+        writer.writerows(export_data)
 
 
 if __name__ == '__main__':
