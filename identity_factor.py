@@ -12,16 +12,8 @@ FILE_CSV_EDUCATION = 'dataprocess/data_process_education.csv'
 FILE_CSV_CERTIFICATION = 'dataprocess/data_process_certification.csv'
 
 # List to compare
-LIST_ING_DESARROLLO_ANALISIS = ['desarrollador', 'ingeniero de sistemas', 'ingeniero', 'sistemas', 'freelance', 'programador', 'web', 'developer', 'software', 'ingenieria']
-"""LIST_ADM_BD = ['dato', 'datos']
-LIST_ADM_REDES = ['redes', 'administrador de redes', 'administrador', 'soporte de red', 'red']
-LIST_ING_SOPORTE = ['soporte', 'mantenimiento']
-LIST_ADM_SERIVICIO = ['administrador de servicio', 'servicio', 'informaticos', 'informatico', 'servicio informatico', 'servicios informaticos']
-LIST_DEV_SOLUCIONES = ['desarrolador de soluciones', 'soluciones']
-DEV_SIS_INFORMATICOS = ['sistemas informaticos', 'desarrollador de soluciones informaticos']
-INVESTIGADOR = ['investigador']
-GESTOR_PROYECTO = ['gestor', 'gestor de proyectos', 'gestora de proyectos']
-"""
+LIST_ING_DESARROLLO_ANALISIS = ['desarrollador', 'ingeniero de sistemas', 'ingeniero', 'sistemas', 'freelance',
+                                'programador', 'web', 'developer', 'software', 'ingenieria', 'implementador']
 
 def fact_ident_experience(filecsv):
     """
@@ -137,6 +129,7 @@ def data_classification():
         reader = csv.DictReader(file_csv)
         for row in reader:
             row_res = row["responsibility"].lower().split(" ")
+
             if row_res.__contains__("null"):
                 continue
 
