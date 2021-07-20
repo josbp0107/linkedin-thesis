@@ -1,10 +1,19 @@
-# linkedin-thesis
+# LinkedIn Thesis
 
 Este proyecto está basado en el desarrollo de una herramienta para la extracción, almacenamiento y procesamiento de datos de los egresados de la Corporacion Universitaria del Caribe CECAR del programa de Ingeniera de Sistemas, donde se realiza un scraping o raspado de las cuentas de estos egresado para contar con un monitoreo de su evolución educativa y laboral.
 
 <blockquote>
 <p>Este proyecto es desarrollado para la Coporacion Universitaria del Caribe CECAR como Proyecto de grado</p>
 </blockquote>
+
+## Tecnologias
+1. Python.
+2. Selenium.
+3. Web Driver.
+
+### Funcionalidades de la aplicación
+1. Extraer datos de los perfiles de egresados de la Corporacion Universitaria del Caribe desde LinkedIn.
+
 
 ### Clona el repositorio
 
