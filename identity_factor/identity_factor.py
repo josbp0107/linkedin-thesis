@@ -227,8 +227,6 @@ def data_classification():
     print("*" * 20, " OTROS PERFILES ", "*" * 20)
     print(others)
 
-    print("")
-
     print(contador_total)
     print(count_others + count_gest_proyect + count_desarrollador + count_admin_bd + count_admin_red + count_soporte + count_adm_servicio + count_dev_solucion + count_dev_sistemas + count_investigador)
 
@@ -251,10 +249,21 @@ def data_classification():
         writer.writerow(header)
         writer.writerows(export_data)
 
+    return count_desarrollador, count_admin_bd, count_admin_red, count_soporte, count_adm_servicio, count_dev_solucion, count_dev_sistemas, count_investigador, count_gest_proyect, count_others, contador_total
+
+
+def calculate_percentage():
+    desarrollador, admin_bd, admin_red,soporte, adm_servicio, dev_solucion, dev_sistemas, investigador, gest_proyect, others, contador_total = data_classification()
+
+    # Calculate percentage of all professional profiles
+    # % = (cantidad / total) * 100%
+
+    
 
 if __name__ == '__main__':
     # fact_ident_experience(FILE_CSV_EXPERIENCE)
     # fact_ident_education(FILE_CSV_EDUCATION)
     # fact_ident_certifications(FILE_CSV_CERTIFICATION)
-    data_classification()
+    # data_classification()
+    calculate_percentage()
 
