@@ -177,58 +177,8 @@ def data_classification():
                 others.append(row["responsibility"])
             contador_total += 1  # Count line of csv file
 
-    print("*"*20, "Total de desarrollador: ", "*"*20)
-    print(count_desarrollador)
-    print("*"*20, " DESARROLLADOR ", "*"*20)
-    print(desarrollador)
-
-    print("*"*20, "Total de administrador de bd: ", "*"*20)
-    print(count_admin_bd)
-    print("*" * 20, " ADMINISTRADOR DE BASE DE DATOS ", "*" * 20)
-    print(admin_bd)
-
-    print("*" * 20, "Total de administrador de red: ", "*" * 20)
-    print(count_admin_red)
-    print("*" * 20, " ADMINISTRADOR DE REDES ", "*" * 20)
-    print(admin_red)
-
-    print("*" * 20, "Total de Soporte: ", "*" * 20)
-    print(count_soporte)
-    print("*" * 20, " SOPORTE ", "*" * 20)
-    print(soporte)
-
-    print("*" * 20, "Total de Administrador de servicios informaticos: ", "*" * 20)
-    print(count_adm_servicio)
-    print("*" * 20, " ADMINISTRADOR DE SERVICIOS INFORMATICOS", "*" * 20)
-    print(admin_servicio)
-
-    print("*" * 20, "Total de Desarrollador de Soluciones Integrales: ", "*" * 20)
-    print(count_dev_solucion)
-    print("*" * 20, " DESARROLLADOR DE SOLUCIONES INTEGRALES", "*" * 20)
-    print(dev_soluciones)
-
-    print("*" * 20, "Total de Desarrollador de Sistemas Informáticos: ", "*" * 20)
-    print(count_dev_sistemas)
-    print("*" * 20, " DESARROLLADOR DE SISTEMAS INFORMATICOS ", "*" * 20)
-    print(dev_sistemas)
-
-    print("*" * 20, "Total de Investigador: ", "*" * 20)
-    print(count_investigador)
-    print("*" * 20, " INVESTIGADOR ", "*" * 20)
-    print(investigador)
-
-    print("*" * 20, "Total de Gestor de proyectos de ingenieria: ", "*" * 20)
-    print(count_gest_proyect)
-    print("*" * 20, " GESTOR DE PROYECTOS DE INGENIERIA ", "*" * 20)
-    print(gestor_proyec)
-
-    print("*" * 20, "Total de Otros perfiles: ", "*" * 20)
-    print(count_others)
-    print("*" * 20, " OTROS PERFILES ", "*" * 20)
-    print(others)
-
-    print(contador_total)
-    print(count_others + count_gest_proyect + count_desarrollador + count_admin_bd + count_admin_red + count_soporte + count_adm_servicio + count_dev_solucion + count_dev_sistemas + count_investigador)
+    #print(contador_total)
+    #print(count_others + count_gest_proyect + count_desarrollador + count_admin_bd + count_admin_red + count_soporte + count_adm_servicio + count_dev_solucion + count_dev_sistemas + count_investigador)
 
     work_profile = desarrollador + admin_bd + admin_red + soporte + admin_servicio + dev_soluciones + dev_sistemas + investigador + gestor_proyec
 
@@ -253,12 +203,40 @@ def data_classification():
 
 
 def calculate_percentage():
-    desarrollador, admin_bd, admin_red,soporte, adm_servicio, dev_solucion, dev_sistemas, investigador, gest_proyect, others, contador_total = data_classification()
-
+    desarrollador, admin_bd, admin_red, soporte, adm_servicio, dev_solucion, dev_sistemas, investigador, gest_proyect, others, contador_total = data_classification()
+    
     # Calculate percentage of all professional profiles
     # % = (cantidad / total) * 100%
+    total = round((desarrollador / contador_total)*100, 2) 
+    print(f'Ingeniero de Desarrollo y Análisis de Software: {total}%')
 
+    total = round((admin_bd / contador_total)*100, 2) 
+    print(f'Administrador de Bases de datos: {total}%')
     
+    total = round((admin_red / contador_total)*100, 2) 
+    print(f'Administrador redes de computadores: {total}%')
+    
+    total = round((soporte / contador_total)*100, 2) 
+    print(f'Ingeniero de Soporte y/o mantenimiento: {total}%')
+    
+    total = round((adm_servicio / contador_total)*100, 2) 
+    print(f'Administrador de servicios informáticos: {total}%')
+    
+    total = round((dev_solucion / contador_total)*100, 2) 
+    print(f'Desarrollador de Soluciones Integrales: {total}%')
+    
+    total = round((dev_sistemas / contador_total)*100, 2) 
+    print(f'Desarrollador de Sistemas Informáticos: {total}%')
+    
+    total = round((investigador / contador_total)*100, 2) 
+    print(f'Investigador: {total}%')
+    
+    total = round((gest_proyect / contador_total)*100, 2) 
+    print(f'Gestor de proyectos de ingeniería: {total}%')
+    
+    total = round((others / contador_total)*100, 2) 
+    print(f'Otros perfiles profesionales: {total}%')
+
 
 if __name__ == '__main__':
     # fact_ident_experience(FILE_CSV_EXPERIENCE)
@@ -266,4 +244,3 @@ if __name__ == '__main__':
     # fact_ident_certifications(FILE_CSV_CERTIFICATION)
     # data_classification()
     calculate_percentage()
-
