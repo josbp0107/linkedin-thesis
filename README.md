@@ -45,6 +45,14 @@ Es necesario agregar un nuevo archivo el cual contendrá las credenciales del us
 
 Es recomendable nombrar este archivo como **account.txt**
 
+### ChromeDriver
+
+Debes descargar el driver de Chrome para poder realizar la automatizacion y el respectivo scraping en la pagina de LinkedIn.
+
+1. https://chromedriver.chromium.org/downloads
+2. Luego de haber descargado el driver, debes crear una carpeta en la raiz con el nombre drivers
+3. Y finalmente, dentro de esta carpeta debes agrega el driver.
+
 ### Ejecutar proyecto 
 
 Linux & Mac
