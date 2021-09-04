@@ -53,6 +53,8 @@ Debes descargar el driver de Chrome para poder realizar la automatizacion y el r
 2. Luego de haber descargado el driver, debes crear una carpeta en la raiz con el nombre drivers
 3. Y finalmente, dentro de esta carpeta debes agrega el driver.
 
+**Recuerda tener actualizado el navegador en la ultima versión**
+
 ### Ejecutar proyecto 
 
 Linux & Mac
